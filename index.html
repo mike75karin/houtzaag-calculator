@@ -1,0 +1,88 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Houtzaag Calculator</title>
+<style>
+body{font-family:Arial,sans-serif;background:#eef3ed;margin:0;padding:20px;color:#203525}
+main{max-width:520px;margin:auto}
+h1{color:#28613b}
+label{display:block;margin-top:16px;font-weight:bold}
+input,select{box-sizing:border-box;width:100%;padding:12px;margin-top:6px;font-size:17px;border:1px solid #aaa;border-radius:8px}
+button{padding:13px;background:#28613b;color:white;border:0;border-radius:8px;margin-top:15px}
+.card{background:white;padding:20px;border-radius:14px;margin-top:18px}
+img{max-width:100%;margin-top:12px;border-radius:8px}
+small{color:#555}
+</style>
+</head>
+<body>
+<main>
+<h1>🌳 Houtzaag Calculator</h1>
+<div class="card">
+<label>Foto van de boomstam</label>
+<input type="file" accept="image/*" id="foto">
+<img id="voorbeeld" hidden alt="Boomstam">
+
+<label>Diameter boomstam (cm)</label>
+<input id="diameter" type="number" value="40" min="1" step="0.1">
+
+<label>Lengte boomstam (meter)</label>
+<input id="lengte" type="number" value="3" min="0.1" step="0.1">
+
+<label>Wat wil je zagen?</label>
+<select id="soort">
+<option value="plank">Planken</option>
+<option value="balk">Balken</option>
+</select>
+
+<label>Breedte (cm)</label>
+<input id="breedte" type="number" value="10" min="0.1" step="0.1">
+
+<label>Dikte / hoogte (cm)</label>
+<input id="dikte" type="number" value="2" min="0.1" step="0.1">
+
+<p>Zaagsnede: 2 mm</p>
+</div>
+<div class="card">
+<h2>Berekening</h2>
+<p id="resultaat">Vul de maten in.</p>
+<small>Dit is een theoretische schatting op basis van een ronde stam. De foto wordt alleen getoond; automatische herkenning van de stam is nog niet ingebouwd. Schors, gebreken en zaagstrategie kunnen de opbrengst veranderen.</small>
+</div>
+</main>
+<script>
+const ids=["diameter","lengte","soort","breedte","dikte"];
+const el=id=>document.getElementById(id);
+function bereken(){
+const d=Number(el("diameter").value);
+const l=Number(el("lengte").value);
+const w=Number(el("breedte").value);
+const h=Number(el("dikte").value);
+if(![d,l,w,h].every(v=>Number.isFinite(v)&&v>0)){
+el("resultaat").textContent="Voer geldige maten in.";
+return;
+}
+const radius=d/2,kerf=.2;
+let aantal=0;
+for(let y=-radius+h/2;y+h/2<=radius+1e-8;y+=h+kerf){
+const top=Math.max(Math.abs(y-h/2),Math.abs(y+h/2));
+const beschikbaar=2*Math.sqrt(Math.max(0,radius*radius-top*top));
+aantal+=Math.max(0,Math.floor((beschikbaar+kerf)/(w+kerf)));
+}
+const volume=aantal*w*h*l/10000;
+el("resultaat").innerHTML=
+"<strong>"+aantal+" stuks</strong><p>Lengte per stuk: "+l+" meter</p><p>Geschat houtvolume: "+volume.toFixed(3)+" m³</p>";
+}
+ids.forEach(id=>el(id).addEventListener("input",bereken));
+el("foto").addEventListener("change",function(){
+const file=this.files[0];
+if(!file)return;
+const img=el("voorbeeld");
+img.src=URL.createObjectURL(file);
+img.hidden=false;
+});
+bereken();
+</script>
+</body>
+</html>
