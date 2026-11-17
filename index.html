@@ -1,348 +1,312 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="nl">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Houtzaag Calculator Pro</title>
+<title>Houtzaag Calculator LT20 Start</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#0d1912;color:#edf7ef;font:16px system-ui,Arial}
-header{padding:20px;background:#205237}
-h1{margin:0;font-size:25px}
-main{max-width:900px;margin:auto;padding:12px}
-section{background:#1a2c21;border:1px solid #46644e;border-radius:14px;padding:15px;margin:12px 0}
+body{font-family:Arial,sans-serif;background:#edf2ee;color:#173426;margin:0;padding:14px}
+main{max-width:850px;margin:auto}
+h1{font-size:25px;color:#17643b}
 h2{font-size:19px}
-label{display:block;margin:10px 0 5px}
-input,button,select{font:inherit}
-input[type=number],select{width:100%;padding:10px;border-radius:8px;background:#102016;color:white;border:1px solid #688c72}
-input[type=file]{max-width:100%}
-button{background:#48c783;border:0;border-radius:9px;padding:12px;margin:4px 2px;font-weight:bold;color:#092113}
-button.alt{background:#405c48;color:white}
-canvas{display:block;width:100%;height:auto;background:#101711;border:1px solid #65846b;border-radius:9px;touch-action:none}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}
-.row{display:grid;grid-template-columns:1fr 1fr 75px 42px;gap:5px;margin:10px 0;align-items:end}
-small,p{line-height:1.5}
-.note{color:#c3d5c6}
-#result{white-space:pre-line;line-height:1.7}
+section{background:white;border-radius:13px;padding:15px;margin:14px 0;box-shadow:0 2px 7px #0001}
+label{display:block;margin:12px 0 5px;font-weight:bold}
+input,select,button{font-size:16px;max-width:100%}
+input[type=number],select{width:100%;padding:11px;border:1px solid #aaa;border-radius:7px}
+input[type=file]{width:100%}
+button{background:#176b42;color:white;border:0;border-radius:8px;padding:12px;margin:6px 4px 6px 0;cursor:pointer}
+button.secondary{background:#50665a}
+canvas{display:block;width:100%;height:auto;background:#f4eee3;border:1px solid #ccc;border-radius:8px;touch-action:manipulation}
+.small{font-size:13px;color:#526257}
+.note{background:#e8f4ec;padding:12px;border-radius:8px}
+#results{white-space:pre-wrap;line-height:1.6}
 </style>
 </head>
 <body>
-<header>
-<h1>🪵 Houtzaag Calculator Pro</h1>
-<p>Wood-Mizer LT20 Start</p>
-</header>
 <main>
+<h1>🌳 Houtzaag Calculator</h1>
+<p>Wood-Mizer LT20 Start</p>
 
 <section>
-<h2>1. Foto voorkant stam</h2>
-<input type="file" id="frontFile" accept="image/*">
-<p class="note">Tik minimaal 3 punten rondom de buitenrand. Meer punten geven een nauwkeurigere omtrek.</p>
-<canvas id="front" width="600" height="450"></canvas>
-<button onclick="undoPoint(0)" class="alt">Punt terug</button>
-<button onclick="clearPoints(0)" class="alt">Punten wissen</button>
-<p id="frontStatus">Nog geen foto gekozen.</p>
+<h2>1. Stamgegevens</h2>
+<label>Stamlengte (cm)</label>
+<input id="length" type="number" value="300" min="1">
+<label>Diameter voorkant (cm)</label>
+<input id="frontD" type="number" value="45" min="1">
+<label>Diameter achterkant (cm)</label>
+<input id="backD" type="number" value="40" min="1">
+<label>Zaagsnede (mm)</label>
+<input id="kerf" type="number" value="2" min="0" step=".1">
 </section>
 
 <section>
-<h2>2. Foto achterkant stam</h2>
-<input type="file" id="backFile" accept="image/*">
-<p class="note">Fotografeer de achterkant recht van voren. Markeer de omtrek op dezelfde manier.</p>
-<canvas id="back" width="600" height="450"></canvas>
-<button onclick="undoPoint(1)" class="alt">Punt terug</button>
-<button onclick="clearPoints(1)" class="alt">Punten wissen</button>
-<p id="backStatus">Nog geen foto gekozen.</p>
+<h2>2. Foto voorkant</h2>
+<input type="file" accept="image/*" id="frontFile">
+<p class="small">Tik meerdere punten rondom de buitenrand van de stam aan. Minimaal 3, bij voorkeur 8 tot 16.</p>
+<canvas id="frontCanvas" width="600" height="600"></canvas>
+<p id="frontCount">0 meetpunten</p>
+<button class="secondary" onclick="undoPoint('front')">Laatste punt weg</button>
+<button class="secondary" onclick="clearPoints('front')">Wis punten</button>
 </section>
 
 <section>
-<h2>3. Stamgegevens</h2>
-<div class="grid">
-<div><label>Diameter voorkant (cm)</label><input id="d1" type="number" value="40" min="1"></div>
-<div><label>Diameter achterkant (cm)</label><input id="d2" type="number" value="36" min="1"></div>
-<div><label>Lengte stam (cm)</label><input id="length" type="number" value="250" min="1"></div>
-<div><label>Zaagsnede (mm)</label><input id="kerf" type="number" value="2" min="0" step=".1"></div>
-<div><label>Randmarge (cm)</label><input id="margin" type="number" value="1" min="0" step=".1"></div>
-</div>
+<h2>3. Foto achterkant</h2>
+<input type="file" accept="image/*" id="backFile">
+<p class="small">Plaats ook hier meerdere punten rondom de stam.</p>
+<canvas id="backCanvas" width="600" height="600"></canvas>
+<p id="backCount">0 meetpunten</p>
+<button class="secondary" onclick="undoPoint('back')">Laatste punt weg</button>
+<button class="secondary" onclick="clearPoints('back')">Wis punten</button>
 </section>
 
 <section>
-<h2>4. Balken en planken</h2>
-<p>Voer de gewenste maten in centimeters in.</p>
-<div id="items"></div>
-<button onclick="addItem('Balk',10,10,2)" class="alt">+ Balk</button>
-<button onclick="addItem('Plank',15,2.5,4)" class="alt">+ Plank</button>
+<h2>4. Gewenst hout</h2>
+<label>Breedte plank of balk (cm)</label>
+<input id="width" type="number" value="15" min=".1" step=".1">
+<label>Dikte plank of balk (cm)</label>
+<input id="thick" type="number" value="3" min=".1" step=".1">
+<label>Minimale vrije rand (cm)</label>
+<input id="margin" type="number" value="1" min="0" step=".5">
+<button onclick="calculate()">Bereken optimaal zaagplan</button>
 </section>
 
 <section>
-<h2>5. Slim zaagplan</h2>
-<button onclick="calculate()">🪚 Bereken beste indeling</button>
-<p>Het programma probeert verschillende zaagrichtingen en plaatsingen.</p>
-<canvas id="plan" width="700" height="550"></canvas>
-<h2>Resultaat</h2>
-<div id="result">Druk op berekenen.</div>
+<h2>5. Visueel zaagplan</h2>
+<canvas id="plan" width="600" height="600"></canvas>
+<p class="small">Bruin = stam. Groen = geplande stukken. Rood = eerste snede. De tekening is schematisch.</p>
 </section>
 
 <section>
-<h2>6. Zaagadvies Wood-Mizer LT20 Start</h2>
-<div id="advice">Na de berekening verschijnt hier een voorstel voor de beginzijde en zaagvolgorde.</div>
-<p class="note">Let op: dit is een indicatief indelingsadvies. Controleer de volledige stam, houtgebreken, klempositie, stabiliteit en machinegrenzen voordat je gaat zagen.</p>
+<h2>6. Zaagvolgorde</h2>
+<div id="results">Vul de gegevens in en druk op Bereken.</div>
+</section>
+
+<section>
+<h2>Veiligheid</h2>
+<p class="note">Dit is een indicatieve zaagplanner. Controleer de werkelijke stamvorm, kromming, scheuren, opspanning en machinegrenzen. Volg altijd de handleiding van de Wood-Mizer LT20 Start. De berekende sneden zijn geen automatische machine-instellingen.</p>
 </section>
 </main>
 
 <script>
+const state={
+front:{img:null,points:[]},
+back:{img:null,points:[]}
+};
 const $=id=>document.getElementById(id);
-const ends=[0,1].map((i)=>({
- canvas:$(i?'back':'front'),
- image:null,
- points:[]
-}));
-let placed=[];
-function message(i,s){
- $(i?'backStatus':'frontStatus').textContent=s;
+const num=id=>Number($(id).value);
+
+function redraw(side){
+ const c=$(side+"Canvas"),ctx=c.getContext("2d");
+ const s=state[side];
+ ctx.clearRect(0,0,600,600);
+ if(s.img){
+  const scale=Math.min(600/s.img.width,600/s.img.height);
+  const w=s.img.width*scale,h=s.img.height*scale;
+  ctx.drawImage(s.img,(600-w)/2,(600-h)/2,w,h);
+ }else{
+  ctx.fillStyle="#f3eee5";
+  ctx.fillRect(0,0,600,600);
+  ctx.fillStyle="#647268";
+  ctx.font="22px Arial";
+  ctx.textAlign="center";
+  ctx.fillText("Upload hier een stamfoto",300,300);
+ }
+ const p=s.points;
+ if(p.length){
+  ctx.strokeStyle="#00e6ff";
+  ctx.lineWidth=3;
+  ctx.beginPath();
+  p.forEach((v,i)=>{
+   if(i===0)ctx.moveTo(v.x,v.y);
+   else ctx.lineTo(v.x,v.y);
+  });
+  if(p.length>=3)ctx.closePath();
+  ctx.stroke();
+  p.forEach((v,i)=>{
+   ctx.beginPath();
+   ctx.arc(v.x,v.y,6,0,Math.PI*2);
+   ctx.fillStyle="#ff3030";
+   ctx.fill();
+   ctx.fillStyle="white";
+   ctx.font="bold 17px Arial";
+   ctx.fillText(i+1,v.x+13,v.y-9);
+  });
+ }
+ $(side+"Count").textContent=p.length+" meetpunten";
 }
-function empty(c,t){
- const x=c.getContext('2d');
- x.fillStyle='#101711';x.fillRect(0,0,c.width,c.height);
- x.fillStyle='white';x.textAlign='center';
- x.font='18px system-ui';x.fillText(t,c.width/2,c.height/2);
-}
-ends.forEach((e,i)=>{
- empty(e.canvas,'Kies een foto');
- $(i?'backFile':'frontFile').onchange=async ev=>{
-  const f=ev.target.files[0];if(!f)return;
-  const im=new Image();
+
+["front","back"].forEach(side=>{
+ const c=$(side+"Canvas");
+ c.addEventListener("click",e=>{
+  const r=c.getBoundingClientRect();
+  state[side].points.push({
+   x:(e.clientX-r.left)*600/r.width,
+   y:(e.clientY-r.top)*600/r.height
+  });
+  redraw(side);
+ });
+ $(side+"File").addEventListener("change",e=>{
+  const f=e.target.files[0];
+  if(!f)return;
   const url=URL.createObjectURL(f);
-  im.onload=()=>{
-   e.image=im;e.points=[];
-   const s=Math.min(1,1000/Math.max(im.width,im.height));
-   e.canvas.width=Math.round(im.width*s);
-   e.canvas.height=Math.round(im.height*s);
-   drawEnd(i);URL.revokeObjectURL(url);
-  };
-  im.onerror=()=>{
-   message(i,'Foto niet geopend. Probeer JPG of PNG.');
+  const img=new Image();
+  img.onload=()=>{
+   state[side].img=img;
+   state[side].points=[];
+   redraw(side);
    URL.revokeObjectURL(url);
   };
-  im.src=url;
- };
- e.canvas.addEventListener('pointerdown',ev=>{
-  if(!e.image)return;
-  ev.preventDefault();
-  const r=e.canvas.getBoundingClientRect();
-  e.points.push({
-   x:(ev.clientX-r.left)*e.canvas.width/r.width,
-   y:(ev.clientY-r.top)*e.canvas.height/r.height
-  });
-  drawEnd(i);
+  img.src=url;
  });
+ redraw(side);
 });
-function drawEnd(i){
- const e=ends[i],c=e.canvas,x=c.getContext('2d');
- if(!e.image){empty(c,'Kies een foto');return}
- x.drawImage(e.image,0,0,c.width,c.height);
- const p=e.points;
- if(p.length>1){
-  x.beginPath();
-  p.forEach((a,j)=>j?x.lineTo(a.x,a.y):x.moveTo(a.x,a.y));
-  if(p.length>2)x.closePath();
-  x.strokeStyle='#ffe45b';x.lineWidth=Math.max(2,c.width/200);x.stroke();
- }
- p.forEach((a,j)=>{
-  x.beginPath();x.arc(a.x,a.y,Math.max(5,c.width/100),0,7);
-  x.fillStyle='#ff5555';x.fill();
-  x.fillStyle='white';x.font='bold 18px Arial';
-  x.fillText(j+1,a.x+8,a.y-8);
- });
- message(i,p.length+' meetpunten geplaatst.');
-}
-function undoPoint(i){ends[i].points.pop();drawEnd(i)}
-function clearPoints(i){ends[i].points=[];drawEnd(i)}
-function addItem(type,w,h,q){
- const div=document.createElement('div');
- div.className='row';div.dataset.type=type;
- div.innerHTML=`
- <div><small>${type} breedte</small><input class="w" type="number" min=".1" step=".1" value="${w}"></div>
- <div><small>Dikte</small><input class="h" type="number" min=".1" step=".1" value="${h}"></div>
- <div><small>Aantal</small><input class="q" type="number" min="0" step="1" value="${q}"></div>
- <button class="alt" type="button">×</button>`;
- div.querySelector('button').onclick=()=>div.remove();
- $('items').append(div);
-}
-addItem('Balk',10,10,2);
-addItem('Plank',15,2.5,4);
 
-function polygon(i,d){
- const e=ends[i],p=e.points;
- if(!e.image||p.length<3){
-  return Array.from({length:120},(_,j)=>({
-   x:d/2+d/2*Math.cos(j*Math.PI/60),
-   y:d/2+d/2*Math.sin(j*Math.PI/60)
-  }));
+function undoPoint(side){
+ state[side].points.pop();
+ redraw(side);
+}
+function clearPoints(side){
+ state[side].points=[];
+ redraw(side);
+}
+
+function polygonAt(side,diameter){
+ const p=state[side].points;
+ if(p.length<3)return null;
+ const cx=p.reduce((a,v)=>a+v.x,0)/p.length;
+ const cy=p.reduce((a,v)=>a+v.y,0)/p.length;
+ const ext=Math.max(...p.map(v=>Math.hypot(v.x-cx,v.y-cy)));
+ if(ext<=0)return null;
+ const scale=diameter/(2*ext);
+ return p.map(v=>({x:(v.x-cx)*scale,y:(cy-v.y)*scale}));
+}
+function inside(x,y,poly){
+ if(!poly)return true;
+ let yes=false;
+ for(let i=0,j=poly.length-1;i<poly.length;j=i++){
+  const a=poly[i],b=poly[j];
+  if((a.y>y)!==(b.y>y) &&
+    x<(b.x-a.x)*(y-a.y)/(b.y-a.y)+a.x)yes=!yes;
  }
- const minX=Math.min(...p.map(v=>v.x));
- const maxX=Math.max(...p.map(v=>v.x));
- const minY=Math.min(...p.map(v=>v.y));
- const maxY=Math.max(...p.map(v=>v.y));
- const span=Math.max(maxX-minX,maxY-minY);
- if(span<1)throw Error('Meetpunten liggen te dicht bij elkaar.');
- return p.map(v=>({x:(v.x-minX)*d/span,y:(v.y-minY)*d/span}));
+ return yes;
 }
-function inside(x,y,p){
- let hit=false;
- for(let i=0,j=p.length-1;i<p.length;j=i++){
-  const a=p[i],b=p[j];
-  if((a.y>y)!==(b.y>y)&&
-   x<(b.x-a.x)*(y-a.y)/(b.y-a.y)+a.x)hit=!hit;
- }
- return hit;
-}
-function edgeDistance(x,y,a,b){
- const dx=b.x-a.x,dy=b.y-a.y;
- const den=dx*dx+dy*dy;
- const t=den?Math.max(0,Math.min(1,((x-a.x)*dx+(y-a.y)*dy)/den)):0;
- return Math.hypot(x-a.x-t*dx,y-a.y-t*dy);
-}
-function safe(x,y,p,m){
- if(!inside(x,y,p))return false;
- for(let j=0;j<p.length;j++)
-  if(edgeDistance(x,y,p[j],p[(j+1)%p.length])<m)return false;
- return true;
-}
-function rectangleOK(x,y,w,h,p,m){
- const corners=[[x,y],[x+w,y],[x+w,y+h],[x,y+h]];
- for(let a=0;a<=4;a++)for(let b=0;b<=4;b++){
-  if(!safe(x+w*a/4,y+h*b/4,p,m))return false;
+function validRect(x,y,w,h,diam,poly,margin){
+ const steps=8;
+ for(let i=0;i<=steps;i++){
+  for(let j=0;j<=steps;j++){
+   const px=x+w*i/steps,py=y+h*j/steps;
+   if(Math.hypot(px,py)>diam/2-margin+1e-8)return false;
+   if(poly&&!inside(px,py,poly))return false;
+  }
  }
  return true;
 }
-function normalize(p){
- const minX=Math.min(...p.map(v=>v.x)),minY=Math.min(...p.map(v=>v.y));
- return p.map(v=>({x:v.x-minX,y:v.y-minY}));
-}
-function transform(p,angle,flip){
- const a=angle*Math.PI/180;
- const q=p.map(v=>{
-  const x=flip?-v.x:v.x;
-  return {x:x*Math.cos(a)-v.y*Math.sin(a),
-          y:x*Math.sin(a)+v.y*Math.cos(a)};
- });
- return normalize(q);
-}
-function getRequests(){
- const out=[];
- for(const e of $('items').children){
-  const w=+e.querySelector('.w').value;
-  const h=+e.querySelector('.h').value;
-  const q=+e.querySelector('.q').value;
-  if(!(w>0&&h>0&&Number.isInteger(q)&&q>=0&&q<=100))
-   throw Error('Controleer de maten en aantallen.');
-  for(let i=0;i<q;i++)out.push({w,h,type:e.dataset.type});
- }
- if(out.length>120)throw Error('Maximaal 120 onderdelen.');
- return out.sort((a,b)=>b.w*b.h-a.w*a.h);
-}
-function overlap(a,b,k){
- return a.x<b.x+b.w+k&&a.x+a.w+k>b.x&&
-        a.y<b.y+b.h+k&&a.y+a.h+k>b.y;
-}
-function pack(poly,req,k,m,step){
- const width=Math.max(...poly.map(p=>p.x));
- const height=Math.max(...poly.map(p=>p.y));
- const used=[],missing=[];
- for(const r of req){
-  let best=null;
-  const orientations=[{w:r.w,h:r.h},{w:r.h,h:r.w}];
-  for(const o of orientations){
-   if(best)break;
-   for(let y=0;y+o.h<=height&&!best;y+=step){
-    for(let x=0;x+o.w<=width;x+=step){
-     const box={x,y,w:o.w,h:o.h,type:r.type};
-     if(!rectangleOK(x,y,o.w,o.h,poly,m))continue;
-     if(used.some(u=>overlap(u,box,k)))continue;
-     best=box;break;
+function planFor(rotation,front,back,d1,d2,w,h,k,m){
+ const pieces=[];
+ const diameter=Math.min(d1,d2);
+ const side=diameter;
+ const W=rotation?w:h;
+ const H=rotation?h:w;
+ for(let offset=0;offset<4;offset++){
+  const candidate=[];
+  const stepX=W+k,stepY=H+k;
+  const startX=-side/2+offset*stepX/4;
+  for(let y=-side/2;y+H<=side/2;y+=stepY){
+   for(let x=startX;x+W<=side/2;x+=stepX){
+    if(validRect(x,y,W,H,d1,front,m)&&
+       validRect(x,y,W,H,d2,back,m)){
+      candidate.push({x,y,w:W,h:H});
     }
    }
   }
-  if(best)used.push(best);else missing.push(r);
+  if(candidate.length>pieces.length)pieces.splice(0,pieces.length,...candidate);
  }
- return {used,missing,poly,width,height};
+ return pieces;
 }
 function calculate(){
- try{
-  const d1=+$('d1').value,d2=+$('d2').value;
-  const len=+$('length').value;
-  const k=+$('kerf').value/10,m=+$('margin').value;
-  if(!(d1>0&&d2>0&&len>0&&k>=0&&m>=0))
-   throw Error('Controleer de stamgegevens.');
-  const req=getRequests();
-  const a=polygon(0,d1),b=polygon(1,d2);
-  // Conservatieve benadering: kleinste einddiameter.
-  // Dit is geen volledige 3D-reconstructie.
-  const d=Math.min(d1,d2);
-  const base=d1<=d2?a:b;
-  let best=null;
-  for(let angle=0;angle<180;angle+=30){
-   for(let flip=0;flip<2;flip++){
-    const p=transform(base,angle,flip);
-    const test=pack(p,req,k,m,.5);
-    const score=test.used.reduce((s,v)=>s+v.w*v.h,0);
-    if(!best||score>best.score)
-     best={...test,score,angle,flip};
-   }
-  }
-  placed=best.used;
-  drawPlan(best);
-  const volume=best.score*len/1000000;
-  const beams=placed.filter(p=>p.type==='Balk').length;
-  const boards=placed.filter(p=>p.type==='Plank').length;
-  $('result').textContent=
-   `Balken passend: ${beams}
-Planken passend: ${boards}
-Niet passend: ${best.missing.length}
-Bruto houtinhoud van passende delen: ${volume.toFixed(4)} m³
-Zaagverlies per snede: ${(k*10).toFixed(1)} mm
-Berekende indelingshoek: ${best.angle}°
-Spiegeling: ${best.flip?'ja':'nee'}
-
-Groen = balken
-Blauw = planken
-
-Dit is een indicatieve opbrengst, geen gegarandeerd maximum.`;
-  $('advice').innerHTML=`
-   <p><b>Voorgestelde voorbereiding:</b></p>
-   <p>1. Markeer de bovenkant van de stam aan beide uiteinden voordat je hem draait.</p>
-   <p>2. Gebruik de getekende indeling als referentie. De berekende hoek is ${best.angle}° ten opzichte van de gemarkeerde foto.</p>
-   <p>3. Controleer welke zijde stabiel op het bed van de Wood-Mizer LT20 Start kan liggen en waar de klemmen veilig aangrijpen.</p>
-   <p>4. Kies pas daarna de eerste vlakke zaagsnede. De software bepaalt nog niet betrouwbaar welke fysieke zijde als eerste gezaagd moet worden.</p>
-   <p>5. Controleer na het openen van de stam op scheuren, rot, spanningen en afwijkingen voordat je de volgende sneden maakt.</p>
-   <p><b>Let op:</b> de ingetekende rechthoeken zijn geen uitvoerbare volgorde van lintzaagsneden.</p>`;
- }catch(e){alert(e.message)}
+ const d1=num("frontD"),d2=num("backD"),len=num("length");
+ const w=num("width"),h=num("thick");
+ const k=num("kerf")/10,m=num("margin");
+ if([d1,d2,len,w,h].some(v=>!Number.isFinite(v)||v<=0)
+ || !Number.isFinite(k)||k<0||!Number.isFinite(m)||m<0){
+  alert("Controleer alle maten.");
+  return;
+ }
+ if(Math.min(d1,d2)>300||Math.max(d1,d2)>500){
+  alert("Controleer de diameters; dit programma is bedoeld voor normale stamafmetingen.");
+  return;
+ }
+ const front=polygonAt("front",d1);
+ const back=polygonAt("back",d2);
+ const a=planFor(false,front,back,d1,d2,w,h,k,m);
+ const b=planFor(true,front,back,d1,d2,w,h,k,m);
+ const pieces=b.length>a.length?b:a;
+ const rotated=pieces===b;
+ drawPlan(pieces,Math.min(d1,d2),w,h);
+ const volume=pieces.length*w*h*len/1000000;
+ let message=
+ "Aantal stukken: "+pieces.length+
+ "\nAfmeting per stuk: "+w+" × "+h+" × "+len+" cm"+
+ "\nGeschat netto houtvolume: "+volume.toFixed(3)+" m³"+
+ "\nGekozen oriëntatie: "+(rotated?"90° gedraaid":"standaard")+
+ "\n\nVOORGESTELDE ZAAGVOLGORDE\n";
+ if(!pieces.length){
+  message+="Geen passende stukken gevonden. Kies kleinere maten of controleer de meetpunten.";
+ }else{
+  const rows=[...new Set(pieces.map(p=>p.y.toFixed(3)))].sort((a,b)=>Number(b)-Number(a));
+  message+="1. Leg de stam stabiel op het zaagbed en zet hem volgens de machinehandleiding vast.\n";
+  message+="2. Controleer de vorm en kies de stabiele oplegzijde. De exacte startzijde kan niet veilig uit alleen twee foto's worden vastgesteld.\n";
+  message+="3. Maak een eerste vlakke referentiezijde met een passende buitenste zaagsnede.\n";
+  message+="4. Draai en span de stam opnieuw op volgens de handleiding om een stabiel referentievlak te verkrijgen.\n";
+  let n=5;
+  rows.forEach((y,i)=>{
+   const row=pieces.filter(p=>p.y.toFixed(3)===y);
+   message+=n+". Zaag laag "+(i+1)+
+    " met "+row.length+" geplande stukken. Controleer telkens de ingestelde zaaghoogte en de werkelijke maat.\n";
+   n++;
+  });
+  message+=n+". Meet de stukken na en controleer of extra kantrechtwerk nodig is.\n";
+ }
+ message+="\nLET OP\n";
+ message+="De opbrengst is een geometrische schatting. De twee foto's zijn niet automatisch op elkaar uitgelijnd. Kromming, interne gebreken, stabiliteit en exacte machinebewegingen zijn niet doorgerekend.";
+ if(!front||!back)message+="\nVoor nauwkeuriger plannen: plaats op beide foto's minimaal 3 meetpunten.";
+ $("results").textContent=message;
 }
-function drawPlan(r){
- const c=$('plan'),x=c.getContext('2d');
- const pad=35;
- const z=Math.min((c.width-2*pad)/Math.max(r.width,1),
-                  (c.height-2*pad)/Math.max(r.height,1));
- const ox=(c.width-r.width*z)/2,oy=(c.height-r.height*z)/2;
- x.fillStyle='#101711';x.fillRect(0,0,c.width,c.height);
- x.beginPath();
- r.poly.forEach((p,i)=>i?x.lineTo(ox+p.x*z,oy+p.y*z):
-                         x.moveTo(ox+p.x*z,oy+p.y*z));
- x.closePath();x.fillStyle='#936b45';x.fill();
- x.strokeStyle='#e0b989';x.lineWidth=3;x.stroke();
- r.used.forEach((p,i)=>{
-  const X=ox+p.x*z,Y=oy+p.y*z,W=p.w*z,H=p.h*z;
-  x.fillStyle=p.type==='Balk'?'#52c987':'#6aaef0';
-  x.fillRect(X,Y,W,H);
-  x.strokeStyle='#102017';x.lineWidth=1.5;x.strokeRect(X,Y,W,H);
-  if(W>20&&H>13){
-   x.fillStyle='#07150d';x.font='bold 13px Arial';
-   x.textAlign='center';x.textBaseline='middle';
-   x.fillText(i+1,X+W/2,Y+H/2);
+function drawPlan(pieces,diam,w,h){
+ const c=$("plan"),ctx=c.getContext("2d");
+ ctx.clearRect(0,0,600,600);
+ const scale=520/Math.max(diam,1);
+ const cx=300,cy=300;
+ ctx.fillStyle="#b88c59";
+ ctx.strokeStyle="#654526";
+ ctx.lineWidth=5;
+ ctx.beginPath();
+ ctx.arc(cx,cy,diam/2*scale,0,Math.PI*2);
+ ctx.fill();ctx.stroke();
+ pieces.forEach((p,i)=>{
+  const x=cx+p.x*scale,y=cy-(p.y+p.h)*scale;
+  ctx.fillStyle="#8fd0a0";
+  ctx.strokeStyle="#12683c";
+  ctx.lineWidth=2;
+  ctx.fillRect(x,y,p.w*scale,p.h*scale);
+  ctx.strokeRect(x,y,p.w*scale,p.h*scale);
+  if(i===0){
+   ctx.strokeStyle="#e12525";
+   ctx.lineWidth=4;
+   ctx.beginPath();
+   ctx.moveTo(x,y);
+   ctx.lineTo(x+p.w*scale,y);
+   ctx.stroke();
   }
  });
+ ctx.fillStyle="#183629";
+ ctx.font="16px Arial";
+ ctx.textAlign="left";
+ ctx.fillText(pieces.length+" stukken",15,25);
 }
-empty($('plan'),'Hier verschijnt het zaagplan');
+drawPlan([],40,15,3);
 </script>
 </body>
 </html>
