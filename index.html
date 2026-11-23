@@ -7,24 +7,25 @@
 <title>Houtzaagcalculator LT20</title>
 <style>
 *{box-sizing:border-box}
-body{font-family:Arial,sans-serif;background:#eef3ef;margin:0;color:#243b2d}
-header{background:#176b43;color:white;padding:20px;text-align:center}
+body{margin:0;background:#edf3ee;color:#20392a;font:16px Arial,sans-serif}
+header{background:#176b43;color:white;text-align:center;padding:22px}
 main{max-width:850px;margin:auto;padding:12px}
-section{background:white;padding:17px;margin:12px 0;border-radius:14px;box-shadow:0 2px 8px #0001}
-h1{font-size:25px}h2{font-size:19px}
-label{display:block;margin:12px 0;font-weight:bold}
-input,select{display:block;width:100%;padding:11px;margin-top:5px;border:1px solid #bbb;border-radius:8px;font-size:16px}
-button{background:#176b43;color:white;padding:13px;border:0;border-radius:9px;font-size:16px;margin:5px 0;cursor:pointer}
-button.main{width:100%;font-weight:bold}
-button.remove{background:#a63737}
+section{background:white;border-radius:13px;padding:16px;margin:12px 0;box-shadow:0 2px 8px #0001}
+h1{margin:0 0 8px}h2{font-size:19px}
+label{display:block;margin:10px 0;font-weight:bold}
+input{display:block;width:100%;padding:11px;font-size:16px;border:1px solid #bbb;border-radius:8px;margin-top:5px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-img{max-width:100%;max-height:180px;object-fit:contain}
-canvas{width:100%;border:1px solid #ddd;border-radius:10px}
-.punt{background:#edf4ed;padding:12px;border-radius:10px;margin:10px 0}
-small{color:#58665c}
-#result{background:#e8f3e9;padding:12px;border-radius:9px}
+button{background:#176b43;color:white;border:0;border-radius:8px;padding:12px;margin:5px 3px 5px 0;font-size:15px}
+button.red{background:#a23b36}
+button.big{width:100%;font-size:19px;font-weight:bold}
+canvas{width:100%;height:auto;display:block;border:1px solid #ccc;border-radius:9px;touch-action:none}
+.photo{max-width:420px;margin:auto}
+.note{color:#586b60;font-size:14px;line-height:1.5}
+#result{padding:14px;border-radius:9px;background:#edf5ef}
+.warn{background:#fff0dc!important;color:#873a12}
+.ok{background:#e4f5e6!important}
 li{margin:9px 0;line-height:1.5}
-@media(max-width:480px){.grid{grid-template-columns:1fr}}
+@media(max-width:500px){.grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -35,18 +36,18 @@ Wood-Mizer LT20 Start
 <main>
 
 <section>
-<h2>1. Boomstam</h2>
+<h2>1. Boomstam invoeren</h2>
 <div class="grid">
 <label>Diameter voorkant (cm)
-<input id="d1" type="number" value="45"></label>
+<input id="diam1" type="number" value="45"></label>
 <label>Diameter achterkant (cm)
-<input id="d2" type="number" value="43"></label>
-<label>Lengte (cm)
-<input id="len" type="number" value="300"></label>
+<input id="diam2" type="number" value="43"></label>
+<label>Lengte stam (cm)
+<input id="length" type="number" value="300"></label>
 <label>Zaagverlies (mm)
-<input id="kerf" type="number" value="2" step="0.1"></label>
-<label>Schorsmarge per kant (cm)
-<input id="margin" type="number" value="1"></label>
+<input id="kerf" type="number" value="2" step=".1"></label>
+<label>Schorsmarge per kant (mm)
+<input id="margin" type="number" value="10"></label>
 </div>
 </section>
 
@@ -54,7 +55,7 @@ Wood-Mizer LT20 Start
 <h2>2. Balken</h2>
 <div class="grid">
 <label>Aantal balken
-<input id="bc" type="number" min="0" value="2"></label>
+<input id="bc" type="number" value="3" min="0"></label>
 <label>Breedte (mm)
 <input id="bw" type="number" value="100"></label>
 <label>Hoogte (mm)
@@ -66,7 +67,7 @@ Wood-Mizer LT20 Start
 <h2>3. Planken</h2>
 <div class="grid">
 <label>Aantal planken
-<input id="pc" type="number" min="0" value="5"></label>
+<input id="pc" type="number" value="6" min="0"></label>
 <label>Breedte (mm)
 <input id="pw" type="number" value="150"></label>
 <label>Dikte (mm)
@@ -75,142 +76,239 @@ Wood-Mizer LT20 Start
 </section>
 
 <section>
-<h2>4. Foto's van de stam</h2>
-<label>Foto voorkant
-<input type="file" accept="image/*" id="front">
-<img id="frontImg"></label>
-<label>Foto achterkant
-<input type="file" accept="image/*" id="back">
-<img id="backImg"></label>
-<small>Foto's zijn ter controle. De app meet ze niet automatisch.</small>
+<h2>4. Foto voorkant stam</h2>
+<p class="note">Maak een foto recht voor de stam. Tik met je vinger langs de buitenrand. Zet zoveel punten als nodig, rondom de hele stam.</p>
+<input id="file1" type="file" accept="image/*">
+<div class="photo">
+<canvas id="photo1" width="500" height="500"></canvas>
+</div>
+<button onclick="undo(0)">↶ Laatste punt weg</button>
+<button class="red" onclick="clearPoints(0)">Wis punten</button>
+<p id="count1">0 punten</p>
 </section>
 
 <section>
-<h2>5. Punten en gebreken</h2>
-<p>Voeg zoveel noesten, scheuren of rotte plekken toe als nodig.</p>
-<p>De X- en Y-positie is in centimeters vanaf het midden van de stam. X positief is rechts, Y positief is boven.</p>
-<div id="points"></div>
-<button onclick="addPoint()">+ Punt toevoegen</button>
+<h2>5. Foto achterkant stam</h2>
+<p class="note">Doe hetzelfde met de achterkant. Houd de foto's zoveel mogelijk in dezelfde oriëntatie.</p>
+<input id="file2" type="file" accept="image/*">
+<div class="photo">
+<canvas id="photo2" width="500" height="500"></canvas>
+</div>
+<button onclick="undo(1)">↶ Laatste punt weg</button>
+<button class="red" onclick="clearPoints(1)">Wis punten</button>
+<p id="count2">0 punten</p>
 </section>
 
 <section>
-<button class="main" onclick="calculate()">Bereken zaagplan</button>
+<button class="big" onclick="calculate()">🪵 Bereken zaagplan</button>
 </section>
 
 <section>
-<h2>6. Visueel zaagplan</h2>
-<div id="result">Druk op Bereken zaagplan.</div>
-<p>🟫 Balken &nbsp; 🟦 Planken &nbsp; 🔴 Gebreken</p>
-<canvas id="plan" width="700" height="700"></canvas>
+<h2>6. Berekeningsresultaat</h2>
+<div id="result">Vul de gegevens in en druk op Bereken zaagplan.</div>
 </section>
 
 <section>
-<h2>7. Zaaginstructies</h2>
-<div id="instructions"></div>
-<button onclick="window.print()">Afdrukken / PDF</button>
+<h2>7. Visueel zaagplan</h2>
+<p>🟫 Balken &nbsp; 🟦 Planken</p>
+<canvas id="plan" width="600" height="600"></canvas>
 </section>
+
+<section>
+<h2>8. Zaagbeschrijving</h2>
+<div id="steps">Bereken eerst het zaagplan.</div>
+<button onclick="window.print()">🖨 Afdrukken / PDF</button>
+</section>
+
 </main>
-
 <script>
 const $=id=>document.getElementById(id);
-const val=id=>Number($(id).value);
-let pointId=0;
+const num=id=>Number($(id).value);
+const photos=[null,null];
+const points=[[],[]];
 
-function addPoint(){
- pointId++;
- const div=document.createElement("div");
- div.className="punt";
- div.innerHTML=`
- <strong>Punt ${pointId}</strong>
- <label>Soort gebrek
- <select class="kind">
- <option>Noest</option>
- <option>Scheur</option>
- <option>Rot</option>
- <option>Anders</option>
- </select></label>
- <div class="grid">
- <label>X (cm)<input class="x" type="number" value="0"></label>
- <label>Y (cm)<input class="y" type="number" value="0"></label>
- <label>Straal (cm)<input class="r" type="number" value="2"></label>
- </div>
- <button class="remove" onclick="this.parentElement.remove()">Verwijderen</button>`;
- $("points").appendChild(div);
+function drawPhoto(i){
+ const c=$("photo"+(i+1));
+ const ctx=c.getContext("2d");
+ ctx.clearRect(0,0,500,500);
+ ctx.fillStyle="#e2e8e2";
+ ctx.fillRect(0,0,500,500);
+ if(photos[i]){
+  const im=photos[i];
+  const scale=Math.min(500/im.width,500/im.height);
+  const w=im.width*scale,h=im.height*scale;
+  ctx.drawImage(im,(500-w)/2,(500-h)/2,w,h);
+ }
+ const p=points[i];
+ if(p.length){
+  ctx.beginPath();
+  p.forEach((v,j)=>{
+   if(j===0)ctx.moveTo(v.x,v.y);
+   else ctx.lineTo(v.x,v.y);
+  });
+  if(p.length>=3)ctx.closePath();
+  ctx.strokeStyle="#ffdc00";
+  ctx.lineWidth=3;
+  ctx.stroke();
+  p.forEach((v,j)=>{
+   ctx.beginPath();
+   ctx.arc(v.x,v.y,5,0,Math.PI*2);
+   ctx.fillStyle="#ed2929";
+   ctx.fill();
+   ctx.fillStyle="white";
+   ctx.font="12px Arial";
+   ctx.fillText(j+1,v.x+7,v.y-7);
+  });
+ }
+ $("count"+(i+1)).textContent=p.length+" punten";
 }
 
-for(let i=0;i<3;i++)addPoint();
-
-["front","back"].forEach(id=>{
- $(id).addEventListener("change",e=>{
+[0,1].forEach(i=>{
+ const canvas=$("photo"+(i+1));
+ canvas.addEventListener("pointerdown",e=>{
+  if(!photos[i])return;
+  const r=canvas.getBoundingClientRect();
+  const x=(e.clientX-r.left)*500/r.width;
+  const y=(e.clientY-r.top)*500/r.height;
+  points[i].push({x,y});
+  drawPhoto(i);
+ });
+ $("file"+(i+1)).addEventListener("change",e=>{
   const file=e.target.files[0];
   if(!file)return;
   const reader=new FileReader();
-  reader.onload=()=>$(id+"Img").src=reader.result;
+  reader.onload=()=>{
+   const im=new Image();
+   im.onload=()=>{
+    photos[i]=im;
+    points[i]=[];
+    drawPhoto(i);
+   };
+   im.src=reader.result;
+  };
   reader.readAsDataURL(file);
  });
+ drawPhoto(i);
 });
 
-function intersects(a,b,gap){
- return a.x<b.x+b.w+gap &&
- a.x+a.w+gap>b.x &&
- a.y<b.y+b.h+gap &&
- a.y+a.h+gap>b.y;
+function undo(i){
+ points[i].pop();
+ drawPhoto(i);
+}
+function clearPoints(i){
+ points[i]=[];
+ drawPhoto(i);
 }
 
-function circleFits(a,R){
- return [[a.x,a.y],[a.x+a.w,a.y],
- [a.x,a.y+a.h],[a.x+a.w,a.y+a.h]]
- .every(p=>p[0]**2+p[1]**2<=R**2);
+function polygon(i,diameter){
+ const p=points[i];
+ const cx=p.reduce((s,v)=>s+v.x,0)/p.length;
+ const cy=p.reduce((s,v)=>s+v.y,0)/p.length;
+ const minx=Math.min(...p.map(v=>v.x));
+ const maxx=Math.max(...p.map(v=>v.x));
+ const miny=Math.min(...p.map(v=>v.y));
+ const maxy=Math.max(...p.map(v=>v.y));
+ const span=Math.max(maxx-minx,maxy-miny);
+ if(span<=0)return [];
+ return p.map(v=>({
+  x:(v.x-cx)*diameter/span,
+  y:(cy-v.y)*diameter/span
+ }));
 }
 
-function hitsDefect(a,d){
- let x=Math.max(a.x,Math.min(d.x,a.x+a.w));
- let y=Math.max(a.y,Math.min(d.y,a.y+a.h));
- return (x-d.x)**2+(y-d.y)**2<d.r**2;
+function inside(x,y,p){
+ let hit=false;
+ for(let i=0,j=p.length-1;i<p.length;j=i++){
+  const a=p[i],b=p[j];
+  if(((a.y>y)!==(b.y>y)) &&
+   x<(b.x-a.x)*(y-a.y)/(b.y-a.y)+a.x)
+   hit=!hit;
+ }
+ return hit;
+}
+
+function distanceSegment(x,y,a,b){
+ const dx=b.x-a.x,dy=b.y-a.y;
+ const t=Math.max(0,Math.min(1,
+ ((x-a.x)*dx+(y-a.y)*dy)/(dx*dx+dy*dy||1)));
+ return Math.hypot(x-a.x-t*dx,y-a.y-t*dy);
+}
+
+function safePoint(x,y,p,margin){
+ if(!inside(x,y,p))return false;
+ for(let i=0;i<p.length;i++){
+  if(distanceSegment(x,y,p[i],p[(i+1)%p.length])<margin)
+   return false;
+ }
+ return true;
+}
+
+function fitsShape(r,polys,margin){
+ // Controleer ook punten langs de randen en binnenin.
+ const spacing=5;
+ for(let y=r.y;y<=r.y+r.h+0.001;y+=spacing){
+  for(let x=r.x;x<=r.x+r.w+0.001;x+=spacing){
+   if(!polys.every(p=>safePoint(x,y,p,margin)))
+    return false;
+  }
+ }
+ const samples=[
+ [r.x,r.y],[r.x+r.w,r.y],
+ [r.x,r.y+r.h],[r.x+r.w,r.y+r.h],
+ [r.x+r.w/2,r.y+r.h/2]
+ ];
+ return samples.every(v=>polys.every(p=>
+  safePoint(v[0],v[1],p,margin)));
+}
+
+function overlap(a,b,g){
+ return a.x<b.x+b.w+g &&
+ a.x+a.w+g>b.x &&
+ a.y<b.y+b.h+g &&
+ a.y+a.h+g>b.y;
 }
 
 function calculate(){
- const result=$("result");
- const diameter=Math.min(val("d1"),val("d2"));
- const R=(diameter/2-val("margin"))*10;
- const kerf=val("kerf");
- const length=val("len");
- const bc=val("bc"),pc=val("pc");
+ const d1=num("diam1")*10,d2=num("diam2")*10;
+ const len=num("length"),kerf=num("kerf");
+ const margin=num("margin");
+ const bc=num("bc"),pc=num("pc");
+ const bw=num("bw"),bh=num("bh");
+ const pw=num("pw"),ph=num("ph");
+ const values=[d1,d2,len,kerf,margin,bc,pc,bw,bh,pw,ph];
 
- if(!Number.isFinite(R)||R<=0||!Number.isFinite(length)||length<=0||
- !Number.isFinite(kerf)||kerf<0||kerf>20||
+ if(values.some(v=>!Number.isFinite(v))||
+ d1<=0||d2<=0||len<=0||kerf<0||margin<0||
  !Number.isInteger(bc)||!Number.isInteger(pc)||
- bc<0||pc<0||bc>200||pc>200){
- result.textContent="Controleer de stamgegevens en aantallen.";
- return;
+ bc<0||pc<0||bc+pc>150||
+ (bc>0&&(bw<=0||bh<=0))||
+ (pc>0&&(pw<=0||ph<=0))){
+  $("result").textContent="Controleer alle ingevoerde maten en aantallen (maximaal 150 stukken).";
+  return;
  }
 
- const items=[
- {type:"Balk",count:bc,w:val("bw"),h:val("bh")},
- {type:"Plank",count:pc,w:val("pw"),h:val("ph")}
- ];
- if(items.some(i=>i.count>0&&
- (!Number.isFinite(i.w)||!Number.isFinite(i.h)||i.w<=0||i.h<=0))){
- result.textContent="Controleer de afmetingen van balken en planken.";
- return;
+ if(points[0].length<3||points[1].length<3){
+  $("result").textContent=
+  "Zet eerst minimaal 3 punten rondom de stam op beide foto's.";
+  return;
  }
 
- const defects=[];
- for(const el of document.querySelectorAll(".punt")){
-  const x=Number(el.querySelector(".x").value)*10;
-  const y=Number(el.querySelector(".y").value)*10;
-  const r=Number(el.querySelector(".r").value)*10;
-  if(![x,y,r].every(Number.isFinite)||r<0){
-   result.textContent="Controleer de punten.";
-   return;
-  }
-  if(r>0)defects.push({x,y,r});
+ const polys=[polygon(0,d1),polygon(1,d2)];
+ if(polys.some(p=>p.length<3)){
+  $("result").textContent="De stamomtrek is niet geldig.";
+  return;
  }
 
+ const R=Math.max(d1,d2)/2;
  const placed=[];
- const step=5;
+ const requests=[
+  {type:"Balk",count:bc,w:bw,h:bh},
+  {type:"Plank",count:pc,w:pw,h:ph}
+ ];
+ const counts={Balk:0,Plank:0};
+ const grid=5;
 
- for(const item of items){
+ for(const item of requests){
   for(let n=0;n<item.count;n++){
    let found=null;
    const orientations=[
@@ -219,120 +317,131 @@ function calculate(){
    ];
    for(const [w,h] of orientations){
     if(found)break;
-    if(w>2*R||h>2*R)continue;
-    for(let y=R-h;y>=-R&&!found;y-=step){
-     for(let x=-R;x<=R-w;x+=step){
-      const a={x,y,w,h,type:item.type};
-      if(!circleFits(a,R))continue;
-      if(placed.some(p=>intersects(a,p,kerf)))continue;
-      if(defects.some(d=>hitsDefect(a,{
-       ...d,r:d.r+kerf/2
-      })))continue;
-      found=a;
-      break;
+    for(let y=R-h;y>=-R&&!found;y-=grid){
+     for(let x=-R;x<=R-w;x+=grid){
+      const rect={x,y,w,h,type:item.type};
+      if(placed.some(p=>overlap(rect,p,kerf)))
+       continue;
+      if(fitsShape(rect,polys,margin)){
+       found=rect;
+       break;
+      }
      }
     }
    }
-   if(found)placed.push(found);
-   else break;
+   if(found){
+    placed.push(found);
+    counts[item.type]++;
+   }else{
+    break;
+   }
   }
  }
 
- drawPlan(R,placed,defects);
+ const missingB=bc-counts.Balk;
+ const missingP=pc-counts.Plank;
+ const warning=missingB>0||missingP>0;
 
- const beams=placed.filter(p=>p.type==="Balk").length;
- const planks=placed.filter(p=>p.type==="Plank").length;
- const area=placed.reduce((s,p)=>s+p.w*p.h,0);
- const yieldPct=(100*area/(Math.PI*R*R)).toFixed(1);
+ $("result").className=warning?"warn":"ok";
+ $("result").innerHTML=`
+ <h3>${warning?"⚠️ Niet alles past in de gevonden indeling":
+ "✅ Alle gevraagde stukken ingedeeld"}</h3>
+ <p><b>Balken:</b> gevraagd ${bc},
+ berekend ${counts.Balk},
+ niet ingedeeld ${missingB}</p>
+ <p><b>Planken:</b> gevraagd ${pc},
+ berekend ${counts.Plank},
+ niet ingedeeld ${missingP}</p>
+ <p>${warning?
+ "Probeer kleinere maten, minder stukken of een andere verdeling.":
+ "De stukken passen volgens deze benaderende berekening."}</p>
+ <p class="note">Dit is geen bewijs van de maximale opbrengst.
+ Een andere indeling kan mogelijk meer opleveren.</p>`;
 
- result.innerHTML=`
- <strong>Resultaat</strong>
- <p>Balken: ${beams} van ${bc}</p>
- <p>Planken: ${planks} van ${pc}</p>
- <p>Benutting doorsnede: ${yieldPct}%</p>
- <p>${beams===bc&&planks===pc?
- "Alle gevraagde stukken passen in deze berekende indeling.":
- "Niet alle stukken passen in de gevonden indeling. Probeer andere maten of een andere indeling."}</p>`;
-
- const ordered=[...placed].sort((a,b)=>
- (b.y+b.h)-(a.y+a.h));
-
- let html=`
- <p><strong>Stam:</strong> ${diameter} cm minimale diameter,
- ${length} cm lang, zaagverlies ${kerf} mm.</p>
- <ol>
- <li>Controleer de voor- en achterkant van de stam op scheuren, rot en noesten.</li>
- <li>Bepaal welke zijde het beste als eerste zaagzijde gebruikt kan worden.</li>
- <li>Leg de stam veilig op de Wood-Mizer LT20 Start en klem hem volgens de handleiding.</li>
- <li>Maak eerst een vlakke referentiezijde door de buitenste slab weg te zagen.</li>
- <li>Controleer de werkelijke maten en zaag de stukken volgens de voorgestelde doorsnede-indeling.</li>`;
-
- ordered.forEach((p,i)=>{
- html+=`<li>${p.type} ${i+1}:
- ${p.w} × ${p.h} mm.
- Controleer de positie op de tekening.</li>`;
- });
-
- html+=`<li>Meet na iedere snede en controleer of de stam nog stevig vastligt.</li>
- </ol>
- <p><strong>Let op:</strong> dit is een indicatief 2D-zaagplan.
- Het is geen geoptimaliseerde machinezaagvolgorde.
- De foto's en gebreken worden niet automatisch over de hele stamlengte geanalyseerd.
- Controleer iedere zaagsnede en volg de veiligheidsvoorschriften van Wood-Mizer.</p>`;
-
- $("instructions").innerHTML=html;
+ drawPlan(polys,placed,R);
+ makeSteps(placed,kerf,len);
 }
 
-function drawPlan(R,placed,defects){
- const canvas=$("plan");
- const ctx=canvas.getContext("2d");
- const S=310/R;
- const X=x=>350+x*S;
- const Y=y=>350-y*S;
+function drawPlan(polys,placed,R){
+ const c=$("plan"),ctx=c.getContext("2d");
+ ctx.clearRect(0,0,600,600);
+ const scale=270/R;
+ const X=x=>300+x*scale;
+ const Y=y=>300-y*scale;
 
- ctx.clearRect(0,0,700,700);
  ctx.fillStyle="#fff";
- ctx.fillRect(0,0,700,700);
+ ctx.fillRect(0,0,600,600);
 
- ctx.beginPath();
- ctx.arc(350,350,R*S,0,2*Math.PI);
- ctx.fillStyle="#ead0a4";
- ctx.fill();
- ctx.lineWidth=5;
- ctx.strokeStyle="#77512b";
- ctx.stroke();
-
- defects.forEach(d=>{
+ polys.forEach((p,i)=>{
   ctx.beginPath();
-  ctx.arc(X(d.x),Y(d.y),d.r*S,0,2*Math.PI);
-  ctx.fillStyle="#d94b4b99";
-  ctx.fill();
-  ctx.strokeStyle="#b52828";
-  ctx.lineWidth=2;
+  p.forEach((v,j)=>{
+   if(j===0)ctx.moveTo(X(v.x),Y(v.y));
+   else ctx.lineTo(X(v.x),Y(v.y));
+  });
+  ctx.closePath();
+  ctx.strokeStyle=i===0?"#a36a25":"#317d43";
+  ctx.lineWidth=3;
   ctx.stroke();
  });
 
  placed.forEach((p,i)=>{
-  ctx.fillStyle=p.type==="Balk"?"#c78a40":"#66a8cc";
-  ctx.fillRect(X(p.x),Y(p.y+p.h),p.w*S,p.h*S);
-  ctx.strokeStyle="#263d30";
-  ctx.lineWidth=1.5;
-  ctx.strokeRect(X(p.x),Y(p.y+p.h),p.w*S,p.h*S);
-
-  if(p.w*S>28&&p.h*S>17){
-   ctx.fillStyle="#172a20";
+  ctx.fillStyle=p.type==="Balk"?"#bd8a45":"#6db4df";
+  ctx.fillRect(X(p.x),Y(p.y+p.h),
+   p.w*scale,p.h*scale);
+  ctx.strokeStyle="#253a30";
+  ctx.lineWidth=1;
+  ctx.strokeRect(X(p.x),Y(p.y+p.h),
+   p.w*scale,p.h*scale);
+  if(p.w*scale>25&&p.h*scale>18){
+   ctx.fillStyle="#172c20";
    ctx.textAlign="center";
    ctx.font="bold 13px Arial";
-   ctx.fillText(
-    (p.type==="Balk"?"B":"P")+(i+1),
-    X(p.x+p.w/2),
-    Y(p.y+p.h/2)+4
-   );
+   ctx.fillText((p.type==="Balk"?"B":"P")+(i+1),
+    X(p.x+p.w/2),Y(p.y+p.h/2)+4);
   }
  });
 }
 
-calculate();
+function makeSteps(placed,kerf,len){
+ const ordered=[...placed].sort((a,b)=>
+  (b.y+b.h)-(a.y+a.h));
+ let html=`
+ <p><b>🪵 Stap 1 — Stam controleren</b></p>
+ <p>Controleer de omtrek op beide uiteinden.
+ Controleer ook kromming, scheuren en andere gebreken
+ over de hele lengte.</p>
+ <p><b>📐 Stap 2 — Maten controleren</b></p>
+ <p>Controleer de werkelijke afmetingen,
+ de gewenste houtlengte van ${len} cm
+ en de zaagkerf van ${kerf} mm.</p>
+ <p><b>🔄 Stap 3 — Stam positioneren</b></p>
+ <p>Kies een stabiele ligging en een geschikte
+ eerste vlakke referentiezijde.
+ Klem de stam volgens de machinehandleiding.</p>
+ <p><b>🪚 Stap 4 — Voorgestelde stukken</b></p>
+ <ol>`;
+
+ ordered.forEach((p,i)=>{
+  html+=`<li>${p.type}: ${p.w} × ${p.h} mm.
+  Controleer de positie in de doorsnedetekening.</li>`;
+ });
+
+ html+=`</ol>
+ <p><b>⚙️ Stap 5 — Machine-instellingen</b></p>
+ <p>Gebruik de handleiding van de Wood-Mizer LT20 Start
+ om de zaaghoogte en eventuele maatinstellingen
+ te bepalen. Controleer de werkelijke zaaghoogte
+ vóór iedere snede.</p>
+ <p><b>⚠️ Veiligheid</b></p>
+ <p>De tekening toont een mogelijke doorsnede-indeling,
+ geen uitvoerbare zaagvolgorde of CNC-programma.
+ De exacte zaaghoogten, draaistappen en
+ bedieningspictogrammen moeten nog worden
+ afgestemd op jouw machine en bediening.
+ Volg altijd de machinehandleiding.</p>`;
+
+ $("steps").innerHTML=html;
+}
 </script>
 </body>
 </html>
