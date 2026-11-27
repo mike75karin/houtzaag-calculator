@@ -1,38 +1,37 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="nl">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#176449">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<title>Houtzaagcalculator LT20 Start</title>
+<title>Houtzaagcalculator LT20 Start V5</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#edf3ef;color:#19382b;font:16px system-ui,-apple-system,sans-serif}
-main{max-width:760px;margin:auto;padding:16px}
+body{margin:0;background:#edf3ef;color:#19382b;font:16px system-ui,sans-serif}
+main{max-width:760px;margin:auto;padding:15px}
 h1{font-size:26px}
-h2{font-size:21px;margin:0 0 14px}
-.card{background:white;padding:18px;border-radius:18px;margin:14px 0;box-shadow:0 2px 9px #173b2110}
+h2{font-size:21px}
+.card{background:white;padding:16px;border-radius:18px;margin:14px 0;box-shadow:0 2px 9px #173b2110}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 label{display:block;font-weight:650;font-size:14px}
-input,select{display:block;width:100%;padding:12px;border:1px solid #bacfc3;border-radius:10px;font-size:17px;margin-top:5px}
-button{border:0;border-radius:10px;padding:12px 16px;font-size:15px;font-weight:bold;background:#176449;color:white;cursor:pointer}
+input,select{width:100%;padding:12px;border:1px solid #bacfc3;border-radius:10px;font-size:17px;margin:5px 0 10px}
+button{border:0;border-radius:10px;padding:12px;font-size:15px;font-weight:bold;background:#176449;color:white;cursor:pointer}
 .secondary{background:#dfeae3;color:#164d37}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 .muted,small{color:#587064;font-size:14px}
-.photo{width:100%;height:auto;display:block;border:2px dashed #aac3b4;border-radius:12px;touch-action:manipulation;background:#f4f7f4}
-.notice{background:#e9f2ed;border-radius:12px;padding:13px;line-height:1.6;white-space:pre-line}
+canvas,svg{width:100%;height:auto;display:block;background:#f4f7f4;border-radius:12px}
+canvas{touch-action:none;border:2px dashed #aac3b4}
+.notice{background:#e9f2ed;border-radius:12px;padding:13px;line-height:1.6;white-space:pre-line;overflow-wrap:anywhere}
 .warning{background:#fff0d2;padding:12px;border-radius:10px;line-height:1.5}
-#plan{width:100%;height:auto;display:block;background:#f7f8f2;border-radius:12px}
-.key{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:110px;min-width:110px;min-height:48px;padding:7px;border:2px solid #263a3b;border-radius:5px;color:white;font-weight:bold;font-size:12px;text-align:center}
+.key{display:inline-flex;align-items:center;justify-content:center;width:110px;min-width:110px;min-height:48px;padding:7px;border:2px solid #263a3b;border-radius:5px;color:white;font-weight:bold;font-size:12px;text-align:center}
 .green{background:#28684e}
 .blue{background:#21678e}
 .red{background:#ad3434}
 .yellow{background:#efd13d;color:#222}
 .keyrow{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #ddd}
-.keyrow span:last-child{flex:1;font-size:14px}
 details{margin:12px 0;padding:12px;border:1px solid #bacfc3;border-radius:10px}
 summary{font-weight:bold;cursor:pointer}
 ol{padding-left:24px;line-height:1.7}
@@ -42,109 +41,170 @@ li{margin-bottom:7px}
 </head>
 <body>
 <main>
-<h1>🌳 Houtzaagcalculator</h1>
-<p class="muted">Wood-Mizer LT20 Start · SW Setwork<br>
-iPhone &amp; Android</p>
+
+<h1>🌳 Houtzaagcalculator V5</h1>
+<p class="muted">Wood-Mizer LT20 Start · SW Setwork<br>iPhone &amp; Android</p>
 
 <section class="card">
-<h2>1. Stam en gewenste stukken</h2>
+<h2>1. Stamgegevens</h2>
 <div class="grid">
-<label>Diameter stam (cm)
-<input id="diam" type="number" min="1" max="200" step="0.1" value="45"></label>
+
+<label>Kleinste diameter (cm)
+<input id="diam" type="number" min="1" max="200" step="0.1" value="45">
+</label>
 
 <label>Stamlengte (m)
-<input id="length" type="number" min="0.1" step="0.1" value="6"></label>
-
-<label>Aantal balken
-<input id="beams" type="number" min="0" step="1" value="2"></label>
-
-<label>Aantal planken
-<input id="boards" type="number" min="0" step="1" value="4"></label>
-
-<label>Breedte balk (cm)
-<input id="bw" type="number" min="0.1" step="0.1" value="10"></label>
-
-<label>Hoogte balk (cm)
-<input id="bh" type="number" min="0.1" step="0.1" value="10"></label>
-
-<label>Breedte plank (cm)
-<input id="pw" type="number" min="0.1" step="0.1" value="20"></label>
-
-<label>Dikte plank (cm)
-<input id="ph" type="number" min="0.1" step="0.1" value="2.5"></label>
+<input id="length" type="number" min="0.1" step="0.1" value="6">
+</label>
 
 <label>Zaagverlies (mm)
-<input id="kerf" type="number" min="0.1" step="0.1" value="2"></label>
+<input id="kerf" type="number" min="0.1" step="0.1" value="2">
+</label>
 
 <label>Randreserve (cm)
-<input id="margin" type="number" min="0" step="0.1" value="0.5"></label>
-</div>
+<input id="margin" type="number" min="0" step="0.1" value="0.5">
+</label>
 
-<div class="actions">
-<button id="calculate">Bereken zaagplan</button>
 </div>
-<p class="muted">Gebruik de kleinste gemeten stamdiameter zonder schors. De randreserve is instelbaar.</p>
+<p class="muted">Meet de stam zonder schors. Controleer ook de diameter en kromming tussen beide uiteinden.</p>
 </section>
 
 <section class="card">
 <h2>2. Foto's van de stam</h2>
+
+<p>Upload beide stamuiteinden. Tik met je vinger rondom de buitenrand van het bruikbare hout.</p>
+
 <p class="muted">
-Upload beide stamuiteinden. Markeer de omtrek met je vinger.
-Plaats de punten op volgorde langs de buitenrand.
-Zorg dat beide foto's dezelfde fysieke bovenkant en links-rechtsoriëntatie hebben.
+Je mag zoveel punten plaatsen als je wilt.
+Gebruik bij voorkeur 15 tot 30 punten per foto.
+Markeer de punten op volgorde rondom de stam.
+Beide foto's moeten dezelfde fysieke bovenkant en links-rechtsoriëntatie hebben.
 </p>
+
 <div id="ends"></div>
+<div id="photoStatus" class="notice"></div>
 </section>
 
 <section class="card">
-<h2>3. Resultaat en zaagplan</h2>
+<h2>3. Gewenste balken en planken</h2>
+
+<h3>🟩 Balken</h3>
+<div class="grid">
+
+<label>Aantal balken
+<input id="beams" type="number" min="0" max="100" step="1" value="2">
+</label>
+
+<label>Breedte balk (cm)
+<input id="bw" type="number" min="0.1" step="0.1" value="10">
+</label>
+
+<label>Hoogte balk (cm)
+<input id="bh" type="number" min="0.1" step="0.1" value="10">
+</label>
+
+</div>
+
+<h3>🟨 Planken</h3>
+<div class="grid">
+
+<label>Aantal planken
+<input id="boards" type="number" min="0" max="100" step="1" value="4">
+</label>
+
+<label>Breedte plank (cm)
+<input id="pw" type="number" min="0.1" step="0.1" value="20">
+</label>
+
+<label>Dikte plank (cm)
+<input id="ph" type="number" min="0.1" step="0.1" value="2.5">
+</label>
+
+</div>
+
+<label>Voorrang bij onvoldoende ruimte
+<select id="priority">
+<option value="count">Meeste stukken</option>
+<option value="beam">Balken eerst</option>
+<option value="plank">Planken eerst</option>
+<option value="volume">Meeste houtvolume</option>
+</select>
+</label>
+
+<button id="calculate">Bereken zaagplan</button>
+<p class="muted">De berekening wordt ook automatisch bijgewerkt.</p>
+</section>
+
+<section class="card">
+<h2>4. Resultaat en zaagtekening</h2>
+
 <div id="status" class="notice"></div>
-<svg id="plan" viewBox="0 0 420 460"
-role="img" aria-label="Geometrisch zaagplan"></svg>
+
+<svg id="plan" viewBox="0 0 440 470"
+role="img" aria-label="Zaagplan"></svg>
+
 <p class="muted">
 🟩 Balken<br>
 🟨 Planken<br>
-🔴 Genummerde horizontale zaagzones<br>
-Oranje stippellijn: achterste stamcontour.
+🔴 Horizontale zaagzones<br>
+🔵 Breedtebewerking<br>
+Groene lijn: voorste stamcontour<br>
+Oranje stippellijn: achterste stamcontour
 </p>
 </section>
 
 <section class="card">
-<h2>4. Voorgestelde zaagvolgorde</h2>
+<h2>5. Zaagvolgorde en draaien</h2>
+
 <div id="startAdvice" class="notice"></div>
 <ol id="steps"></ol>
+
+<h3>Breedtebewerking</h3>
+
+<div style="font-size:36px;text-align:center">
+▰ ↻ 90° ▮
+</div>
+
+<div id="turnAdvice" class="notice"></div>
+
 <p class="warning">
-Dit is een geometrisch bewerkingsvoorstel.
-Controleer iedere laag, de opspanning, vrije zaagweg
-en benodigde ondersteuning voordat je zaagt.
+De draaiingen zijn geometrische voorstellen.
+Controleer veilige opspanning, ondersteuning,
+klemposities en vrije zaagweg.
+Gebruik geschikte hulpmiddelen en volg de machinehandleiding.
 </p>
 </section>
 
 <section class="card">
-<h2>5. Referentiehoogtes</h2>
+<h2>6. Referentiehoogtes</h2>
+
 <label>Gemeten middelpunt boven zaagbed (cm)
-<input id="centerHeight" type="number"
-min="0" step="0.1" placeholder="Zelf meten"></label>
+<input id="centerHeight" type="number" min="0" step="0.1" placeholder="Zelf meten">
+</label>
 
 <label>Eenheid machinedisplay
 <select id="machineUnit">
 <option value="10">Millimeters</option>
 <option value="1">Centimeters</option>
-</select></label>
+</select>
+</label>
 
-<div id="cutHeights" class="notice"
-style="margin-top:12px"></div>
+<div id="cutHeights" class="notice"></div>
 
 <p class="warning">
-Referentiehoogtes zijn geen rechtstreeks gevalideerde
-machineposities. De app kent de kalibratie,
-werkelijke stamligging en klemposities niet.
+Dit zijn geometrische referentiehoogtes,
+geen gevalideerde machineposities.
+Na draaien opnieuw meten.
 </p>
 </section>
 
 <section class="card">
-<h2>6. SW Setwork instellingen</h2>
+<h2>7. SW Setwork instellingen</h2>
+
 <div id="machineAdvice" class="notice"></div>
+
+<h3>Voorgestelde bedieningsvolgorde</h3>
+<ol id="machineSteps"></ol>
 
 <h3>Bedieningspictogrammen</h3>
 
@@ -155,7 +215,7 @@ werkelijke stamligging en klemposities niet.
 
 <div class="keyrow">
 <span class="key blue">↑<br>MANUAL PROGRAM</span>
-<span>Handmatig programma voor verschillende diktes.</span>
+<span>Programma voor verschillende diktes.</span>
 </div>
 
 <div class="keyrow">
@@ -180,7 +240,7 @@ werkelijke stamligging en klemposities niet.
 
 <div class="keyrow">
 <span class="key red">KERF</span>
-<span>Zaagsnedebreedte en afstandsmodus.</span>
+<span>Zaagsnedebreedte instellen.</span>
 </div>
 
 <div class="keyrow">
@@ -198,147 +258,71 @@ werkelijke stamligging en klemposities niet.
 <span>Kalibratie en selectie van het zaagtype.</span>
 </div>
 
-<h3>7. Originele SW Setwork snelstartgids</h3>
+<h3>SW Setwork snelstartgids</h3>
 
 <details>
 <summary>🔴 KERF — zaagverlies</summary>
-<ol>
-<li>Houd KERF ingedrukt.</li>
-<li>Voer de werkelijke zaagsnedebreedte in.</li>
-<li>Opslaan met NEXT CUT.</li>
-</ol>
+<p>Controleer de werkelijke zaagsnedebreedte.
+Gebruik de KERF-instelling volgens de originele handleiding.</p>
 <div id="kerfAdvice" class="notice"></div>
 </details>
 
 <details>
 <summary>🔵 SET HEIGHT — bandhoogte</summary>
-<ol>
-<li>Meet de werkelijke bandhoogte boven het zaagbed.</li>
-<li>Houd SET HEIGHT ingedrukt.</li>
-<li>Voer de juiste hoogte in.</li>
-<li>Opslaan met NEXT CUT.</li>
-</ol>
+<p>Vergelijk de gemeten bandhoogte boven het zaagbed met de displaywaarde.
+Volg de SET HEIGHT-procedure uit de handleiding.</p>
 </details>
 
 <details>
-<summary>🔴 CALIBR. — zaagtype</summary>
-<p>Volgens de aangeleverde snelstartkaart:</p>
-<ol>
-<li>Schakel SW10 in.</li>
-<li>Houd CALIBR. ingedrukt wanneer SW10 oplicht.</li>
-<li>LT15: waarde 20. LT20/40: waarde 5.</li>
-<li>Opslaan met NEXT CUT.</li>
-</ol>
-<p>Controleer de machine- en besturingsversie.</p>
-</details>
-
-<details>
-<summary>🔴 Automatische kalibratie</summary>
-<ol>
-<li>Volgens de kaart: bandhoogte 150 mm.</li>
-<li>Houd CALIBR. ingedrukt tot Auto Call verschijnt.</li>
-<li>Druk opnieuw op CALIBR.</li>
-<li>Wacht op End-Call.</li>
-<li>Vergelijk de werkelijke hoogte met het display.</li>
-</ol>
-<p>Volg hierbij alle veiligheidsvoorwaarden uit de handleiding.</p>
+<summary>🔴 CALIBR. — zaagtype en kalibratie</summary>
+<p>De eerder aangeleverde kaart vermeldde waarde 5 voor LT20/40.
+Controleer eerst de besturingsversie en originele handleiding.
+Voer kalibratie uitsluitend volgens de fabrikant uit.</p>
 </details>
 
 <details>
 <summary>🟢 Normale modus</summary>
-<ol>
-<li>Gewenste maat invoeren of A, B of C kiezen.</li>
-<li>NEXT CUT selecteren.</li>
-<li>Controleer de positie voordat je zaagt.</li>
-</ol>
+<p>Geschikt voor afzonderlijk gecontroleerde snijposities.
+Controleer iedere positie voordat je zaagt.</p>
 </details>
 
 <details>
 <summary>🔵 QUICK PROGRAM — gelijke diktes</summary>
-<ol>
-<li>Positioneer de band op de stam.</li>
-<li>Voer de gewenste afmeting in.</li>
-<li>Selecteer QUICK PROGRAM.</li>
-<li>Pas eventueel de dikte aan met de pijltjestoetsen.</li>
-<li>NEXT CUT voor de startpositie.</li>
-<li>SAVE PROGRAM volgens de originele kaart.</li>
-</ol>
+<p>Voor opeenvolgende lagen met gelijke diktes.
+Controleer startpositie, zaagverlies en display-eenheid.</p>
 <div id="quickAdvice" class="notice"></div>
 </details>
 
 <details>
 <summary>🔵 MANUAL PROGRAM — verschillende diktes</summary>
-<ol>
-<li>Positioneer de band op de stam.</li>
-<li>Selecteer MANUAL PROGRAM. P-1 verschijnt.</li>
-<li>Voer de onderste plaatdikte in.</li>
-<li>Druk op de pijl omhoog.</li>
-<li>Voer de volgende plaatdikte in en herhaal.</li>
-<li>NEXT CUT voor de startpositie.</li>
-<li>SAVE PROGRAM volgens de originele kaart.</li>
-</ol>
+<p>Voor verschillende laagdiktes.
+Onderstaande lijst is een geometrisch overzicht,
+geen gevalideerd machineprogramma.</p>
 <div id="manualAdvice" class="notice"></div>
 </details>
 
 <details>
-<summary>🟢 Nieuw A B C programma</summary>
-<ol>
-<li>Houd de programmatoets ingedrukt.</li>
-<li>Gebruik DEL. PRG. alleen wanneer je bestaande instellingen wilt wissen.</li>
-<li>Selecteer de gewenste programmatoets.</li>
-<li>Voer de onderste plaatdikte in.</li>
-<li>Gebruik MANUAL PROGRAM voor volgende diktes.</li>
-<li>SAVE PROGRAM.</li>
-</ol>
-</details>
-
-<details>
-<summary>🟢 Werken met A B C programma's</summary>
-<ol>
-<li>Houd de gewenste programmatoets ingedrukt.</li>
-<li>Selecteer de startpositie met de pijltjestoetsen.</li>
-<li>Voer eventueel een andere maat in.</li>
-<li>NEXT CUT.</li>
-<li>SAVE PROGRAM volgens de kaart.</li>
-</ol>
-</details>
-
-<details>
-<summary>🟢 A B C vaste waarden opslaan</summary>
-<ol>
-<li>Schakel SW10 in.</li>
-<li>Houd A, B of C ingedrukt wanneer SW10 oplicht.</li>
-<li>Druk opnieuw op dezelfde toets.</li>
-<li>Voer de maat in.</li>
-<li>NEXT CUT om op te slaan.</li>
-</ol>
+<summary>🟢 A B C programma's</summary>
+<p>Gebruik opgeslagen diktes of programma's.
+Controleer de bestaande waarden.
+Gebruik SAVE PROGRAM volgens de handleiding.</p>
 </details>
 
 <details>
 <summary>🟨 BUMP UP High en Low</summary>
-<ol>
-<li>Schakel SW10 in.</li>
-<li>Houd BUMP UP ingedrukt wanneer SW10 oplicht.</li>
-<li>Selecteer Hi of Lo met de pijltjestoetsen.</li>
-<li>Stel de afstand in volgens de originele kaart.</li>
-<li>Opslaan met NEXT CUT.</li>
-</ol>
+<p>Controleer de benodigde vrije retourhoogte.
+Gebruik de instellingen volgens de originele snelstartkaart.</p>
 </details>
 
 <details>
 <summary>🔵 Vaste retourhoogte</summary>
-<ol>
-<li>Breng de zaagkop op de gewenste retourhoogte.</li>
-<li>Druk op SAVE PROGRAM tot het lampje brandt.</li>
-</ol>
-<p>Controleer voldoende vrije ruimte.</p>
+<p>Controleer voldoende vrije ruimte boven de stam en klemmen.
+Volg de SAVE PROGRAM-procedure uit de handleiding.</p>
 </details>
 
 <p class="warning">
-Deze gids is gebaseerd op de twee aangeleverde
-Wood-Mizer snelstartkaarten.
 De app bestuurt de machine niet.
-De originele handleiding blijft leidend.
+De originele Wood-Mizer handleiding blijft leidend.
 </p>
 </section>
 
@@ -346,17 +330,22 @@ De originele handleiding blijft leidend.
 <h2>8. App installeren en delen</h2>
 <p><b>iPhone:</b> Safari → Delen → Zet op beginscherm.</p>
 <p><b>Android:</b> Chrome → menu ⋮ → Toevoegen aan startscherm.</p>
+
 <button id="share">Deel de app met een collega</button>
+
 <p class="muted">Foto's en berekeningen worden lokaal verwerkt.</p>
 </section>
 
 </main>
+
 <script>
 'use strict';
 
 const $=id=>document.getElementById(id);
 const num=id=>Number($(id).value);
-const fmt=n=>Number(n.toFixed(2)).toLocaleString('nl-NL');
+const fmt=n=>Number.isFinite(n)?
+Number(n.toFixed(2)).toLocaleString('nl-NL'):'—';
+
 const NS='http://www.w3.org/2000/svg';
 
 const ends=[
@@ -364,75 +353,139 @@ const ends=[
 {name:'Achterkant',image:null,points:[]}
 ];
 
+let timer;
 let lastRows=[];
 let lastLines=[];
-let timer;
+let lastAngle=0;
+
+function schedule(){
+clearTimeout(timer);
+$('status').textContent='Zaagplan wordt bijgewerkt…';
+timer=setTimeout(calculate,300);
+}
 
 ends.forEach((e,i)=>{
+
 const box=document.createElement('div');
+
 box.innerHTML=`
 <h3>${e.name}</h3>
+
 <label>Foto kiezen
 <input type="file" accept="image/*" id="file${i}">
 </label>
-<canvas class="photo" id="photo${i}" width="640" height="520"></canvas>
+
+<label>Kleinste gemeten breedte van dit uiteinde (cm)
+<input id="endDiam${i}" type="number"
+min="1" max="200" step="0.1"
+placeholder="Optioneel">
+</label>
+
+<canvas id="photo${i}" width="640" height="520"></canvas>
+
 <div class="actions">
 <button class="secondary" id="undo${i}">Laatste punt weg</button>
 <button class="secondary" id="clear${i}">Wis punten</button>
+<button id="done${i}">Omtrek klaar</button>
 </div>
+
 <small id="count${i}">0 punten</small>`;
+
 $('ends').appendChild(box);
 
 const c=$('photo'+i);
 const ctx=c.getContext('2d');
 
+function imageRect(){
+const s=Math.min(
+640/e.image.width,
+520/e.image.height);
+
+const w=e.image.width*s;
+const h=e.image.height*s;
+
+return {
+x:(640-w)/2,
+y:(520-h)/2,w,h
+};
+}
+
 function draw(){
+
 ctx.clearRect(0,0,640,520);
 ctx.fillStyle='#f4f7f4';
 ctx.fillRect(0,0,640,520);
 
 if(e.image){
-const s=Math.min(640/e.image.width,520/e.image.height);
-const w=e.image.width*s;
-const h=e.image.height*s;
-ctx.drawImage(e.image,(640-w)/2,(520-h)/2,w,h);
+
+const b=imageRect();
+ctx.drawImage(e.image,b.x,b.y,b.w,b.h);
+
 }else{
+
 ctx.fillStyle='#587064';
 ctx.font='22px sans-serif';
 ctx.textAlign='center';
 ctx.fillText('Kies een foto',320,260);
 ctx.textAlign='start';
+
 }
 
 if(e.points.length){
-ctx.strokeStyle='#00ef8b';
-ctx.lineWidth=4;
+
 ctx.beginPath();
+
 e.points.forEach((p,j)=>{
 if(j)ctx.lineTo(p.x,p.y);
 else ctx.moveTo(p.x,p.y);
 });
-if(e.points.length>2)ctx.closePath();
+
+if(e.points.length>=3){
+ctx.closePath();
+ctx.fillStyle='rgba(0,230,120,.15)';
+ctx.fill();
+}
+
+ctx.strokeStyle='#00ef8b';
+ctx.lineWidth=4;
 ctx.stroke();
 
 e.points.forEach((p,j)=>{
+
 ctx.fillStyle='#00ef8b';
 ctx.beginPath();
 ctx.arc(p.x,p.y,6,0,Math.PI*2);
 ctx.fill();
-ctx.fillStyle='#082f1c';
+
 ctx.font='bold 17px sans-serif';
+ctx.fillStyle='#fff';
+ctx.strokeStyle='#19382b';
+ctx.lineWidth=3;
+
+ctx.strokeText(j+1,p.x+9,p.y-7);
 ctx.fillText(j+1,p.x+9,p.y-7);
+
 });
+
 }
 
-$('count'+i).textContent=e.points.length+' punten';
+$('count'+i).textContent=
+e.points.length+' punten — '+
+(e.points.length>=12?
+'Omtrek gemarkeerd':
+e.points.length>=3?
+'Voorlopige contour':
+'Minimaal 3 punten nodig');
+
 }
+
 draw();
 
 $('file'+i).onchange=ev=>{
+
 const file=ev.target.files[0];
 if(!file)return;
+
 const url=URL.createObjectURL(file);
 const img=new Image();
 
@@ -448,23 +501,55 @@ img.onerror=()=>{
 URL.revokeObjectURL(url);
 alert('Foto niet leesbaar. Probeer JPG of PNG.');
 };
+
 img.src=url;
+
 };
 
-c.addEventListener('pointerdown',ev=>{
+function addPoint(ev){
+
 if(!e.image)return;
+
+if(ev.cancelable)ev.preventDefault();
+
 const r=c.getBoundingClientRect();
-const x=(ev.clientX-r.left-c.clientLeft)*640/c.clientWidth;
-const y=(ev.clientY-r.top-c.clientTop)*520/c.clientHeight;
-const s=Math.min(640/e.image.width,520/e.image.height);
-const w=e.image.width*s;
-const h=e.image.height*s;
-if(x<(640-w)/2||x>(640+w)/2||
-y<(520-h)/2||y>(520+h)/2)return;
+
+const x=(ev.clientX-r.left-c.clientLeft)
+*640/c.clientWidth;
+
+const y=(ev.clientY-r.top-c.clientTop)
+*520/c.clientHeight;
+
+const b=imageRect();
+
+if(x<b.x||x>b.x+b.w||
+y<b.y||y>b.y+b.h)return;
+
+const prev=e.points[e.points.length-1];
+
+if(prev&&Math.hypot(prev.x-x,prev.y-y)<3)return;
+
 e.points.push({x,y});
+
 draw();
 schedule();
-});
+
+}
+
+if(window.PointerEvent){
+
+c.addEventListener('pointerdown',addPoint);
+
+}else{
+
+c.addEventListener('touchstart',ev=>{
+ev.preventDefault();
+addPoint(ev.changedTouches[0]);
+},{passive:false});
+
+c.addEventListener('mousedown',addPoint);
+
+}
 
 $('undo'+i).onclick=()=>{
 e.points.pop();
@@ -477,61 +562,206 @@ e.points=[];
 draw();
 schedule();
 };
+
+$('done'+i).onclick=()=>{
+if(e.points.length<3){
+alert('Markeer minimaal drie punten.');
+return;
+}
+calculate();
+};
+
 });
 
-function polygon(e){
+function area(p){
+
+let a=0;
+
+for(let i=0;i<p.length;i++){
+const b=p[(i+1)%p.length];
+a+=p[i].x*b.y-b.x*p[i].y;
+}
+
+return Math.abs(a)/2;
+
+}
+
+function bounds(p){
+
+return {
+minX:Math.min(...p.map(a=>a.x)),
+maxX:Math.max(...p.map(a=>a.x)),
+minY:Math.min(...p.map(a=>a.y)),
+maxY:Math.max(...p.map(a=>a.y))
+};
+
+}
+
+function orient(a,b,c){
+return (b.x-a.x)*(c.y-a.y)
+-(b.y-a.y)*(c.x-a.x);
+}
+
+function onSegment(a,b,c){
+
+return Math.abs(orient(a,b,c))<1e-8&&
+c.x>=Math.min(a.x,b.x)-1e-8&&
+c.x<=Math.max(a.x,b.x)+1e-8&&
+c.y>=Math.min(a.y,b.y)-1e-8&&
+c.y<=Math.max(a.y,b.y)+1e-8;
+
+}
+
+function segmentsCross(a,b,c,d){
+
+const o1=orient(a,b,c);
+const o2=orient(a,b,d);
+const o3=orient(c,d,a);
+const o4=orient(c,d,b);
+
+return (o1*o2<0&&o3*o4<0)||
+onSegment(a,b,c)||onSegment(a,b,d)||
+onSegment(c,d,a)||onSegment(c,d,b);
+
+}
+
+function validPolygon(p){
+
+if(area(p)<1e-6)return false;
+
+for(let i=0;i<p.length;i++){
+for(let j=i+1;j<p.length;j++){
+
+if(j===i+1||
+(i===0&&j===p.length-1))continue;
+
+if(segmentsCross(
+p[i],p[(i+1)%p.length],
+p[j],p[(j+1)%p.length]
+))return false;
+
+}
+}
+
+return true;
+
+}
+
+function polygon(e,i,d){
+
 if(e.points.length<3)return null;
-const xs=e.points.map(p=>p.x);
-const ys=e.points.map(p=>p.y);
-const cx=(Math.min(...xs)+Math.max(...xs))/2;
-const cy=(Math.min(...ys)+Math.max(...ys))/2;
-const radius=Math.max(...e.points.map(
-p=>Math.hypot(p.x-cx,p.y-cy)));
-if(!radius)return null;
+
+const b=bounds(e.points);
+const width=b.maxX-b.minX;
+const height=b.maxY-b.minY;
+const span=Math.min(width,height);
+
+if(span<5||!validPolygon(e.points))return null;
+
+const raw=$('endDiam'+i).value.trim();
+const diameter=raw?Number(raw):d;
+
+if(!Number.isFinite(diameter)||
+diameter<=0||diameter>200)return null;
+
+const scale=diameter/span;
+
+const cx=(b.minX+b.maxX)/2;
+const cy=(b.minY+b.maxY)/2;
+
 return e.points.map(p=>({
-x:(p.x-cx)/radius,
-y:(p.y-cy)/radius
+x:(p.x-cx)*scale,
+y:(p.y-cy)*scale
 }));
+
+}
+
+function circle(d){
+
+return Array.from({length:72},(_,i)=>{
+
+const a=i*Math.PI*2/72;
+
+return {
+x:d/2*Math.cos(a),
+y:d/2*Math.sin(a)
+};
+
+});
+
+}
+
+function rotate(p,angle){
+
+const a=angle*Math.PI/180;
+
+return p.map(q=>({
+x:q.x*Math.cos(a)-q.y*Math.sin(a),
+y:q.x*Math.sin(a)+q.y*Math.cos(a)
+}));
+
 }
 
 function inside(x,y,p){
-if(!p)return x*x+y*y<=1+1e-9;
+
 let c=false;
+
 for(let i=0,j=p.length-1;i<p.length;j=i++){
+
 const a=p[i],b=p[j];
+
 if((a.y>y)!==(b.y>y)&&
 x<(b.x-a.x)*(y-a.y)/(b.y-a.y)+a.x)c=!c;
+
 }
+
 return c;
+
 }
 
 function segmentHitsRect(a,b,x,y,w,h){
+
 let lo=0,hi=1;
-const dx=b.x-a.x,dy=b.y-a.y;
+
+const dx=b.x-a.x;
+const dy=b.y-a.y;
+
 const tests=[
 [-dx,a.x-x],
 [dx,x+w-a.x],
 [-dy,a.y-y],
 [dy,y+h-a.y]
 ];
+
 for(const [p,q] of tests){
+
 if(Math.abs(p)<1e-12){
+
 if(q<0)return false;
+
 }else{
+
 const t=q/p;
+
 if(p<0)lo=Math.max(lo,t);
 else hi=Math.min(hi,t);
+
 if(lo>hi)return false;
-}
-}
-return true;
+
 }
 
-function fits(x,y,w,h,r,shapes,margin){
-const X=(x-margin)/r;
-const Y=(y-margin)/r;
-const W=(w+2*margin)/r;
-const H=(h+2*margin)/r;
+}
+
+return true;
+
+}
+
+function fits(x,y,w,h,shapes,margin){
+
+const X=x-margin;
+const Y=y-margin;
+const W=w+2*margin;
+const H=h+2*margin;
 
 const corners=[
 [X,Y],[X+W,Y],
@@ -539,341 +769,788 @@ const corners=[
 ];
 
 for(const p of shapes){
-if(!corners.every(c=>inside(c[0],c[1],p)))return false;
-if(p){
-for(let i=0;i<p.length;i++){
-if(segmentHitsRect(p[i],p[(i+1)%p.length],X,Y,W,H))
+
+if(!corners.every(c=>inside(c[0],c[1],p)))
 return false;
+
+for(let i=0;i<p.length;i++){
+
+if(segmentHitsRect(
+p[i],p[(i+1)%p.length],
+X,Y,W,H))return false;
+
 }
+
 }
-}
+
 return true;
+
 }
 
-function svgEl(tag,attrs,text){
-const el=document.createElementNS(NS,tag);
-Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));
-if(text!==undefined)el.textContent=text;
-return el;
+function commonBounds(shapes){
+
+const b=shapes.map(bounds);
+
+return {
+minX:Math.max(...b.map(q=>q.minX)),
+maxX:Math.min(...b.map(q=>q.maxX)),
+minY:Math.max(...b.map(q=>q.minY)),
+maxY:Math.min(...b.map(q=>q.maxY))
+};
+
 }
 
-function makeRows(types,r,k,shapes,margin,reverse){
+function makeRows(types,shapes,k,margin,reverse,offset){
+
 const rows=[];
-let y=-r+margin;
-const inc=Math.max(0.15,r/90);
-let guard=0;
+const b=commonBounds(shapes);
+
+const minX=b.minX+margin;
+const maxX=b.maxX-margin;
+const minY=b.minY+margin;
+const maxY=b.maxY-margin;
+
+const inc=Math.max(.25,(maxY-minY)/75);
+
+let cursor=offset;
 
 for(const type of types){
+
 let left=type.count;
-while(left>0&&y+type.h<=r-margin&&guard++<2000){
+let guard=0;
+
+while(left>0&&
+cursor+type.h<=maxY-minY&&
+guard++<250){
+
+const y=reverse?
+maxY-cursor-type.h:
+minY+cursor;
+
+const maxCount=Math.min(
+left,
+Math.floor((maxX-minX+k)/(type.w+k))
+);
+
 let best=null;
-const yy=reverse?-y-type.h:y;
-const maxCount=Math.min(left,
-Math.floor((2*r+k)/(type.w+k)));
 
 for(let n=maxCount;n>=1&&!best;n--){
-const width=n*type.w+(n-1)*k;
-const positions=[-width/2];
-for(let x=-r+margin;x+width<=r-margin;x+=inc){
-positions.push(x);
+
+const w=n*type.w+(n-1)*k;
+const center=(minX+maxX-w)/2;
+
+if(fits(center,y,w,type.h,shapes,margin)){
+
+best={
+x:center,y,w,h:type.h,count:n,type
+};
+
+break;
+
 }
 
-for(const x of positions){
-if(fits(x,yy,width,type.h,r,shapes,margin)){
-best={x,y:yy,w:width,h:type.h,
-count:n,type};
+for(let x=minX;x+w<=maxX+1e-8;x+=inc){
+
+if(fits(x,y,w,type.h,shapes,margin)){
+
+best={
+x,y,w,h:type.h,count:n,type
+};
+
 break;
+
 }
+
 }
+
 }
 
 if(best){
+
 rows.push(best);
 left-=best.count;
-y+=type.h+k;
+cursor+=type.h+k;
+
 }else{
-y+=inc;
+
+cursor+=inc;
+
 }
+
 }
+
 }
+
 return rows;
+
+}
+
+function svgEl(tag,attrs,text){
+
+const el=document.createElementNS(NS,tag);
+
+Object.entries(attrs).forEach(
+([k,v])=>el.setAttribute(k,v)
+);
+
+if(text!==undefined)el.textContent=text;
+
+return el;
+
+}
+
+function addStep(id,text){
+
+const li=document.createElement('li');
+li.textContent=text;
+$(id).appendChild(li);
+
+}
+
+function score(rows){
+
+let b=0,p=0,a=0;
+
+rows.forEach(q=>{
+
+if(q.type.prefix==='B')b+=q.count;
+else p+=q.count;
+
+a+=q.count*q.type.w*q.type.h;
+
+});
+
+switch($('priority').value){
+
+case 'beam':return [b,p,a];
+case 'plank':return [p,b,a];
+case 'volume':return [a,b+p,b];
+default:return [b+p,a,b];
+
+}
+
+}
+
+function better(a,b){
+
+const x=score(a);
+const y=score(b);
+
+for(let i=0;i<x.length;i++){
+
+if(x[i]>y[i]+1e-8)return true;
+if(x[i]<y[i]-1e-8)return false;
+
+}
+
+return false;
+
 }
 
 function calculate(){
-lastRows=[];
-lastLines=[];
+
+clearTimeout(timer);
+
+try{
+
+calculatePlan();
+
+}catch(error){
+
+$('status').textContent=
+'Berekening niet gelukt: '+error.message;
+
 $('plan').replaceChildren();
 $('steps').replaceChildren();
+
+lastRows=[];
+lastLines=[];
+
+$('startAdvice').textContent='Geen geldig plan.';
+$('turnAdvice').textContent='Geen geldig plan.';
+
+updateMachine();
+
+}
+
+}
+
+function calculatePlan(){
+
+lastRows=[];
+lastLines=[];
+lastAngle=0;
+
+$('plan').replaceChildren();
+$('steps').replaceChildren();
+
+$('startAdvice').textContent='Geen geldig plan.';
+$('turnAdvice').textContent='Geen geldig plan.';
 
 const d=num('diam');
 const len=num('length');
 const k=num('kerf')/10;
 const margin=num('margin');
+
 const bc=num('beams');
 const pc=num('boards');
 
-const ids=['diam','length','kerf','margin','beams',
-'boards','bw','bh','pw','ph'];
+const ids=[
+'diam','length','kerf','margin',
+'beams','boards','bw','bh','pw','ph'
+];
 
-if(ids.some(id=>$(id).value.trim()===''||
+if(ids.some(id=>
+$(id).value.trim()===''||
 !Number.isFinite(num(id)))||
-d<=0||d>200||len<=0||k<=0||margin<0||
-margin>=d/2||bc<0||pc<0||
-!Number.isInteger(bc)||!Number.isInteger(pc)||
+d<=0||d>200||len<=0||
+k<=0||margin<0||margin>=d/2||
+bc<0||pc<0||
+!Number.isInteger(bc)||
+!Number.isInteger(pc)||
 bc+pc>100||
 ['bw','bh','pw','ph'].some(id=>num(id)<=0)){
-$('status').textContent='Controleer maten en aantallen. Maximaal 100 stukken.';
-$('startAdvice').textContent='Geen geldig plan.';
+
+$('status').textContent=
+'Controleer maten en aantallen. Maximaal 100 stukken.';
+
 updateMachine();
 return;
+
 }
 
-const r=d/2;
-const contours=ends.map(polygon);
-const active=contours.filter(Boolean);
-const shapes=[null,...active];
+for(let i=0;i<2;i++){
+
+const raw=$('endDiam'+i).value.trim();
+
+if(raw&&(
+!Number.isFinite(Number(raw))||
+Number(raw)<=0||Number(raw)>200)){
+
+$('status').textContent=
+'Controleer de diameter van stamuiteinde '+(i+1);
+
+updateMachine();
+return;
+
+}
+
+}
+
+const contours=ends.map((e,i)=>polygon(e,i,d));
+
+for(let i=0;i<2;i++){
+
+if(ends[i].points.length>=3&&!contours[i]){
+
+$('photoStatus').textContent=
+'Ongeldige contour bij '+ends[i].name+
+'. Plaats de punten rondom de rand zonder kruisende lijnen.';
+
+$('status').textContent=
+'Corrigeer de gemarkeerde omtrek.';
+
+updateMachine();
+return;
+
+}
+
+}
+
+const active=contours.filter(Boolean).length;
+
+const base=contours.map(p=>p||circle(d));
+
+$('photoStatus').textContent=
+'Geldige fotocontouren: '+active+' van 2\n'+
+(active===2?
+'Beide gemarkeerde contouren worden gebruikt.':
+active===1?
+'Eén foto en één geschatte cirkel worden gebruikt.':
+'Voorlopige berekening met ronde stam.')+
+'\nGebruik bij voorkeur 15 tot 30 punten per foto.';
 
 const beam={
-name:'Balk',count:bc,
-w:num('bw'),h:num('bh'),
-color:'#79b993',prefix:'B'
+name:'Balk',
+prefix:'B',
+count:bc,
+w:num('bw'),
+h:num('bh'),
+color:'#79b993'
 };
 
 const plank={
-name:'Plank',count:pc,
-w:num('pw'),h:num('ph'),
-color:'#f1d66c',prefix:'P'
+name:'Plank',
+prefix:'P',
+count:pc,
+w:num('pw'),
+h:num('ph'),
+color:'#f1d66c'
 };
 
-const variants=[];
+let best=[];
+let bestShapes=base;
+
+for(const angle of [0,90,45,135]){
+
+const shapes=base.map(p=>rotate(p,angle));
+
 for(const order of [[beam,plank],[plank,beam]]){
+
 for(const reverse of [false,true]){
-variants.push(makeRows(order,r,k,shapes,margin,reverse));
-}
+
+for(const offset of [0,.5]){
+
+const rows=makeRows(
+order,shapes,k,margin,reverse,offset
+);
+
+if(better(rows,best)){
+
+best=rows;
+bestShapes=shapes;
+lastAngle=angle;
+
 }
 
-const score=rows=>rows.reduce((s,q)=>s+q.count,0);
-const area=rows=>rows.reduce((s,q)=>s+q.count*q.type.w*q.h,0);
-variants.sort((a,b)=>score(b)-score(a)||area(b)-area(a));
+}
 
-const rows=variants[0].sort((a,b)=>a.y-b.y);
-lastRows=rows;
+}
+
+}
+
+}
+
+lastRows=best.sort((a,b)=>a.y-b.y);
 
 const svg=$('plan');
-const scale=340/d;
-const cx=210,cy=220;
 
-svg.appendChild(svgEl('circle',{
-cx,cy,r:170,fill:'#e7e7db',
-stroke:'#176449','stroke-width':2
-}));
+const b=bounds(bestShapes.flat());
 
-contours.forEach((p,i)=>{
-if(!p)return;
+const span=Math.max(
+b.maxX-b.minX,
+b.maxY-b.minY
+);
+
+const scale=330/Math.max(span,1);
+
+const cx=220-(b.minX+b.maxX)/2*scale;
+const cy=215-(b.minY+b.maxY)/2*scale;
+
+const X=x=>cx+x*scale;
+const Y=y=>cy+y*scale;
+
+bestShapes.forEach((p,i)=>{
+
 svg.appendChild(svgEl('polygon',{
-points:p.map(a=>`${cx+a.x*170},${cy+a.y*170}`).join(' '),
-fill:'none',
-stroke:i===0?'#16805b':'#b65b39',
+
+points:p.map(a=>
+X(a.x)+','+Y(a.y)
+).join(' '),
+
+fill:i===0?'#e2e8d8':'none',
+stroke:i===0?'#16805b':'#c46b39',
 'stroke-width':2,
 'stroke-dasharray':i===0?'none':'7 5'
+
 }));
+
 });
 
-let beams=0,boards=0,volume=0;
+let beams=0;
+let boards=0;
+let volume=0;
 
-rows.forEach((q,i)=>{
+lastRows.forEach((q,i)=>{
+
 for(let j=0;j<q.count;j++){
-const x=q.x+j*(q.type.w+k);
-const px=cx+x*scale;
-const py=cy+q.y*scale;
-const w=q.type.w*scale;
-const h=q.h*scale;
 
-const label=q.type.name==='Balk'?
-'B'+(++beams):'P'+(++boards);
+const x=q.x+j*(q.type.w+k);
+
+const name=q.type.prefix==='B'?
+'B'+(++beams):
+'P'+(++boards);
 
 volume+=q.type.w*q.h*len/10000;
 
+const w=q.type.w*scale;
+const h=q.h*scale;
+
 svg.appendChild(svgEl('rect',{
-x:px,y:py,width:w,height:h,
+
+x:X(x),
+y:Y(q.y),
+width:w,
+height:h,
 fill:q.type.color,
-stroke:'#325342','stroke-width':1
+stroke:'#325342',
+'stroke-width':1
+
 }));
 
-if(h>10&&w>18){
+if(w>18&&h>7){
+
 svg.appendChild(svgEl('text',{
-x:px+w/2,y:py+h/2+3,
+
+x:X(x)+w/2,
+y:Y(q.y)+h/2+3,
 'text-anchor':'middle',
-'font-size':Math.min(13,h*.65),
-fill:'#19382b','font-weight':700
-},label));
-}
+'font-size':Math.min(12,h*.65),
+fill:'#19382b',
+'font-weight':700
+
+},name));
+
 }
 
-const li=document.createElement('li');
-li.textContent=
+if(w>55&&h>30){
+
+svg.appendChild(svgEl('text',{
+
+x:X(x)+w/2,
+y:Y(q.y)+h/2+15,
+'text-anchor':'middle',
+'font-size':9,
+fill:'#19382b'
+
+},fmt(q.type.w)+' × '+fmt(q.h)));
+
+}
+
+[x-k/2,x+q.type.w+k/2].forEach(v=>{
+
+svg.appendChild(svgEl('line',{
+
+x1:X(v),x2:X(v),
+y1:Y(q.y),y2:Y(q.y+q.h),
+stroke:'#21678e',
+'stroke-width':1,
+'stroke-dasharray':'3 2'
+
+}));
+
+});
+
+}
+
+addStep('steps',
+
 'Laag '+(i+1)+': '+q.count+' × '+
 q.type.name.toLowerCase()+' van '+
 fmt(q.type.w)+' × '+fmt(q.h)+' cm. '+
 'Laagdikte '+fmt(q.h)+' cm. '+
-'Afzonderlijke breedtebewerking: '+
-fmt(q.type.w)+' cm.';
-$('steps').appendChild(li);
+'Breedtebewerking '+fmt(q.type.w)+' cm.'
+
+);
+
 });
 
 const zones=[];
-rows.forEach(q=>{
+
+lastRows.forEach(q=>{
+
 zones.push(q.y-k/2);
 zones.push(q.y+q.h+k/2);
+
 });
 
-lastLines=[...new Set(zones.map(v=>v.toFixed(5)))]
-.map(Number).sort((a,b)=>a-b);
+lastLines=[...new Set(
+zones.map(v=>v.toFixed(5))
+)].map(Number).sort((a,b)=>a-b);
 
 lastLines.forEach((v,i)=>{
-const y=cy+v*scale;
+
+const y=Y(v);
+
 svg.appendChild(svgEl('rect',{
+
 x:30,y:y-k*scale/2,
-width:360,height:k*scale,
-fill:'#c44b37',opacity:.22
+width:370,
+height:k*scale,
+fill:'#c44b37',
+opacity:.22
+
 }));
+
 svg.appendChild(svgEl('line',{
-x1:30,x2:390,y1:y,y2:y,
+
+x1:30,x2:400,
+y1:y,y2:y,
 stroke:'#b84b37',
 'stroke-width':1,
 'stroke-dasharray':'5 4'
+
 }));
+
 svg.appendChild(svgEl('text',{
-x:395,y:y+3,'font-size':10,
+
+x:405,y:y+3,
+'font-size':10,
 fill:'#b84b37'
+
 },String(i+1)));
+
 });
 
 svg.appendChild(svgEl('text',{
-x:210,y:20,'text-anchor':'middle',
-'font-size':13,'font-weight':700,
+
+x:220,y:22,
+'text-anchor':'middle',
+'font-size':13,
+'font-weight':700,
 fill:'#176449'
-},'↓ Voorgestelde bovenzijde'));
+
+},'↓ Bovenzijde — draaiing '+lastAngle+'°'));
 
 svg.appendChild(svgEl('rect',{
-x:40,y:400,width:340,height:8,
+
+x:40,y:405,
+width:360,height:8,
 rx:3,fill:'#777'
+
 }));
 
 svg.appendChild(svgEl('text',{
-x:210,y:430,'text-anchor':'middle',
-'font-size':13,fill:'#19382b'
+
+x:220,y:434,
+'text-anchor':'middle',
+'font-size':12,
+fill:'#19382b'
+
 },'Zaagbed — schematisch'));
+
+svg.appendChild(svgEl('text',{
+
+x:220,y:453,
+'text-anchor':'middle',
+'font-size':11,
+fill:'#19382b'
+
+},'Balk '+fmt(beam.w)+' × '+fmt(beam.h)+
+' | Plank '+fmt(plank.w)+' × '+fmt(plank.h)+' cm'));
+
+const gross=
+(area(base[0])+area(base[1]))/2
+*len/10000;
 
 const complete=beams===bc&&boards===pc;
 
 $('status').textContent=
-(complete?'✓ Gevraagde stukken geometrisch geplaatst.':
-'⚠️ Niet alle gewenste stukken passen in deze indeling.')+
-'\nBalken: '+beams+' van '+bc+
+
+(complete?
+'✓ Gevraagde stukken geometrisch geplaatst.':
+'⚠ Niet alle gewenste stukken passen in het gevonden plan.')+
+
+'\n\nBalken: '+beams+' van '+bc+
 '\nPlanken: '+boards+' van '+pc+
-'\nHoutvolume: '+fmt(volume)+' m³'+
+'\nHoutopbrengst: '+fmt(volume)+' m³'+
+'\nGeschat stamvolume: '+fmt(gross)+' m³'+
+'\nGeschat rendement: '+fmt(gross>0?volume/gross*100:0)+' %'+
+'\nResthout inclusief zaagverlies: '+fmt(Math.max(0,gross-volume))+' m³'+
 '\nZaagverlies: '+fmt(k*10)+' mm'+
-'\nRandreserve: '+fmt(margin)+' cm'+
-'\nGebruikte fotocontouren: '+active.length+' van 2'+
 '\nOntbrekende balken: '+(bc-beams)+
 '\nOntbrekende planken: '+(pc-boards)+
-'\n\nGeen gegarandeerde maximale opbrengst.';
+'\nFotocontouren: '+active+' van 2'+
+'\n\nGeschatte opbrengst, geen gegarandeerd maximum.';
 
-$('startAdvice').textContent=rows.length?
-'Voorgestelde indeling: horizontale lagen, van boven naar beneden.\n\n'+
-'Fase 1: controleer de getekende stamoriëntatie en referentiezijde.\n'+
-'Fase 2: beoordeel de genummerde horizontale zaagzones.\n'+
-'Fase 3: beoordeel iedere vrijgekomen laag afzonderlijk voor de breedtebewerking.\n'+
-'Een andere oriëntatie kan daarbij nodig zijn. De exacte draaiing en opspanning moeten handmatig worden bepaald.':
+$('startAdvice').textContent=lastRows.length?
+
+'Voorgestelde stamoriëntatie: '+lastAngle+
+'° rechtsom ten opzichte van de foto.'+
+
+'\n\nFase 1: controleer of deze ligging veilig en stabiel mogelijk is.'+
+
+'\nFase 2: controleer de eerste horizontale zaagzone.'+
+
+'\nFase 3: beoordeel de genummerde zones van boven naar beneden.'+
+
+'\nFase 4: controleer de vrijgekomen lagen.'+
+
+'\nFase 5: bewerk de breedte afzonderlijk.':
+
 'Geen passende lagen gevonden.';
 
+$('turnAdvice').textContent=lastRows.length?
+
+'De blauwe lijnen geven de breedtebewerking aan.'+
+
+'\n\nEen kwartslag van 90° van een geschikte laag of kantstuk is geometrisch mogelijk. Gebruik een geschikte opspanning of aparte kantzaag.'+
+
+'\n\n'+lastRows.map((q,i)=>
+
+'Laag '+(i+1)+': '+q.count+
+' stuk(ken), eindbreedte '+fmt(q.type.w)+' cm.'
+
+).join('\n'):
+
+'Geen breedtebewerking berekend.';
+
 updateMachine();
+
 }
 
 function updateMachine(){
+
 const factor=num('machineUnit');
 const unit=factor===10?'mm':'cm';
+
 const f=n=>fmt(n*factor)+' '+unit;
 
 $('machineAdvice').textContent=
+
 'Wood-Mizer LT20 Start\n'+
-'Zaagtype volgens kaart: 5\n'+
-'KERF: '+f(num('kerf')/10)+'\n'+
-'Plankdikte: '+f(num('ph'))+'\n'+
-'Balkhoogte: '+f(num('bh'))+'\n'+
-'Balkbreedte: '+f(num('bw'))+'\n'+
-'Plankbreedte: '+f(num('pw'))+
-'\n\nControleer de display-eenheid en werkelijke machine-instellingen.';
+
+'KERF: '+f(num('kerf')/10)+
+'\nPlankdikte: '+f(num('ph'))+
+'\nBalkhoogte: '+f(num('bh'))+
+'\nBalkbreedte: '+f(num('bw'))+
+'\nPlankbreedte: '+f(num('pw'))+
+'\n\nControleer de display-eenheid.';
 
 $('kerfAdvice').textContent=
-'Gewenste zaagsnedebreedte: '+f(num('kerf')/10);
+'Ingevoerde zaagsnedebreedte: '+f(num('kerf')/10);
 
 $('quickAdvice').textContent=
 'Gewenste plankdikte: '+f(num('ph'))+
-'\nAlleen voor gecontroleerde lagen met gelijke diktes.';
+'\nAlleen voor gecontroleerde, aaneengesloten lagen met gelijke diktes.';
 
-$('manualAdvice').textContent=lastRows.length?
-'Geplande laagdiktes, onderste laag eerst:\n'+
+$('machineSteps').replaceChildren();
+
+addStep('machineSteps',
+'🔴 KERF — controleer het zaagverlies: '+f(num('kerf')/10));
+
+addStep('machineSteps',
+'🔵 SET HEIGHT — controleer bandhoogte en displaywaarde.');
+
+if(lastRows.length){
+
+const uniform=lastRows.every(q=>
+Math.abs(q.h-lastRows[0].h)<.0001);
+
+const contiguous=lastRows.every((q,i)=>
+i===0||Math.abs(
+q.y-lastRows[i-1].y-lastRows[i-1].h-num('kerf')/10
+)<.001);
+
+if(uniform&&contiguous){
+
+addStep('machineSteps',
+'🔵 QUICK PROGRAM — mogelijke modus voor gelijke lagen van '+f(lastRows[0].h)+'.');
+
+}else if(contiguous){
+
+addStep('machineSteps',
+'🔵 MANUAL PROGRAM — mogelijke modus voor verschillende laagdiktes.');
+
+}else{
+
+addStep('machineSteps',
+'🔵 Normale modus — tussenruimtes aanwezig. Controleer iedere zaagzone afzonderlijk.');
+
+}
+
+addStep('machineSteps',
+'🟢 NEXT CUT — controleer iedere positie voordat je zaagt.');
+
+addStep('machineSteps',
+'🟨 BUMP UP — controleer de vrije retourhoogte.');
+
+addStep('machineSteps',
+'🔄 Breedtebewerking — na iedere nieuwe opspanning opnieuw meten.');
+
+$('manualAdvice').textContent=
+
+'Geometrische laagdiktes, onderste laag eerst:\n'+
+
 lastRows.slice().reverse().map((q,i)=>
-'Laag '+(i+1)+': '+f(q.h)).join('\n')+
-'\n\nDit is geen gevalideerd Setwork-programma.':
-'Geen lagen berekend.';
+'Laag '+(i+1)+': '+f(q.h)
+).join('\n')+
+
+'\n\n'+(contiguous?
+'Controleer startpositie en kerf.':
+'Tussenruimtes aanwezig; geen direct invoerbaar programma.')+
+
+'\nGeen gevalideerd Setwork-programma.';
+
+}else{
+
+$('manualAdvice').textContent='Geen lagen berekend.';
+
+}
 
 const raw=$('centerHeight').value;
 const center=Number(raw);
 
 if(!raw||!Number.isFinite(center)||center<0){
+
 $('cutHeights').textContent=
 'Meet eerst het middelpunt boven het zaagbed.';
+
 return;
+
 }
 
 $('cutHeights').textContent=lastLines.length?
+
 'Geometrische middellijnen van de zaagzones:\n\n'+
+
 lastLines.map((y,i)=>
 'Zone '+(i+1)+': '+
 (center-y>=0?f(center-y):'Ongeldige hoogte')
 ).join('\n')+
-'\n\nNiet rechtstreeks als NEXT CUT-posities gebruiken.':
-'Geen zaagzones beschikbaar.';
-}
 
-function schedule(){
-clearTimeout(timer);
-timer=setTimeout(calculate,350);
+'\n\nNiet rechtstreeks als NEXT CUT-posities gebruiken.':
+
+'Geen zaagzones beschikbaar.';
+
 }
 
 $('calculate').onclick=calculate;
 
 document.querySelectorAll('input[type=number]').forEach(el=>{
+
 el.addEventListener('input',
 el.id==='centerHeight'?updateMachine:schedule);
+
 });
 
+$('priority').onchange=schedule;
 $('machineUnit').onchange=updateMachine;
 
 $('share').onclick=async()=>{
+
 try{
+
 if(navigator.share){
+
 await navigator.share({
-title:'Houtzaagcalculator LT20 Start',
+title:'Houtzaagcalculator LT20 Start V5',
 url:location.href
 });
+
 }else if(navigator.clipboard){
+
 await navigator.clipboard.writeText(location.href);
 alert('Link gekopieerd.');
+
 }else{
+
 prompt('Kopieer deze link:',location.href);
+
 }
+
 }catch(e){
+
 if(e.name!=='AbortError'){
 prompt('Kopieer deze link:',location.href);
 }
+
 }
+
 };
 
 calculate();
+
 </script>
 </body>
 </html>
